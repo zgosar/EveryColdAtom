@@ -127,6 +127,14 @@ class GroupClass:
         self.lat = float(self.lat)
         self.long = float(self.long)
 
+    def get_from_csv2(self, line):
+        (self.name, self.webpage, self.institution,
+            self.country, self.address, self.lat,
+            self.long, self.exp_theor, self.fields,
+            self.people, self.atom, self.comment) = line
+        self.lat = float(self.lat)
+        self.long = float(self.long)
+
 
     def __eq__(self, other):
         all_vars = [self.name, self.webpage, self.institution,
@@ -264,7 +272,7 @@ if 0: # convert to javascript
                 out_file.write(a.to_marker(i))
 
 if 1: # convert to json like format
-    with open('ucan_utoronto_database_production_with_geocode.csv', 'r') as in_file:
+    with open('ucan_utoronto_database_production_with_geocode-edited2.csv', 'r') as in_file:
         with open('json_data.js', 'w') as out_file:
             in_file.readline()
             tmp_list = []
@@ -275,3 +283,23 @@ if 1: # convert to json like format
                 #print(tmp_list[-1])
                 #json.dumps(tmp_list[-1])
             json.dump(tmp_list, out_file, ensure_ascii=False)
+
+if 0: # convert to json like format with new csv
+    # does not work.
+    import csv
+    with open('ucan_utoronto_database_production_with_geocode_edited.csv', 'r', newline='') as in_file:
+        with open('json_data.js', 'w') as out_file:
+            in_data = csv.reader(in_file, delimiter=';')
+            #print(in_data[0])
+            #in_data.pop(0)
+            tmp_list = []
+            for i, line in enumerate(in_file):
+                print(line)
+                a = GroupClass()
+                a.get_from_csv2(line)
+                tmp_list.append(a.json_data())
+                #print(tmp_list[-1])
+                #json.dumps(tmp_list[-1])
+            json.dump(tmp_list, out_file, ensure_ascii=False)
+
+                        

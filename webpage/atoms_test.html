@@ -21,7 +21,7 @@
 
 <h1 style="margin: auto; text-align: center;">Every Cold Atoms Experiment in the World</h1>
 
-<div id="mapid" style="width: 100%; height: 50%;"></div>
+<div id="mapid" style="width: 100%; height: 50%; max-width:800px; min-height:250px; margin:0 auto;"></div>
 <script>
 
 	/* In the first edition. Spiderify will be on click, not on hover. 
@@ -50,7 +50,7 @@
 			'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 			'Imagery © <a href="http://mapbox.com">Mapbox</a>',
 		id: 'mapbox.streets',
-		//layers: [layer1]
+		//layers: [layer1] // layers are added later.
 	}).addTo(mymap);
 
 	var oms = new OverlappingMarkerSpiderfier(mymap, {keepSpiderfied: true});
@@ -116,11 +116,10 @@
 				break;
 		}
 		
-		mymap.addLayer(markers[i]);
+		mymap.addLayer(markers[i]); // may be obsolete, as adding a layerGroup later also adds this marker.
 		oms.addMarker(markers[i]);
 		markers[i].on('mouseover', function(event){
 			marker = event.target;
-			//console.log(marker);
 			popup.setContent(marker.desc);
 			popup.setLatLng(marker.getLatLng());
 			mymap.openPopup(popup);
@@ -135,15 +134,12 @@
 	})
 	
 	mymap.on('layeradd', function(layer, layername){
-		//console.log('layername', layername, layer);
-		//console.log('Layer added', layer, layer.layer.options);
+		//console.log(layer);
 		if (typeof layer.layer.options != "undefined" && layer.layer.options.name != null)
-			//console.log('Layer added', layer, layer.layer.options.name);
 			console.log('Layer added', layer.layer.options.name);
 	});
 	mymap.on('layerremove ', function(layer, layername){
 		if (typeof layer.layer.options != "undefined" && layer.layer.options.name != null)
-			//console.log('Layer removed', layer, layer.layer.options.name);
 			console.log('Layer removed', layer.layer.options.name);
 	});
 	
@@ -161,65 +157,6 @@
 	};
 	
 	layers_control = L.control.layers(null, overlayMaps).addTo(mymap);
-	
-/*
-var marker0 = new L.Marker.SVGMarker([54.77525, -1.584852], { iconOptions: { color: "rgb(0,0,100)" }});
-marker0.desc = '<a href="http://massey.dur.ac.uk/csa/research.html"><b>Adams group</b></a><br />Durham, United Kingdom';
-mymap.addLayer(marker0);
-oms.addMarker(marker0);
-marker0.on('mouseover', function(e){
-    popup.setContent(marker0.desc);
-    popup.setLatLng(marker0.getLatLng());
-    mymap.openPopup(popup);
-});    marker0.on('mouseout', function(e){ mymap.closePopup(); });
-var marker1 = new L.Marker.SVGMarker([32.7614296, 35.0195184], { iconOptions: { color: "rgb(0,0,100)" }});
-marker1.desc = '<a href="http://hctpa.haifa.ac.il/index.php/current-members/10-members/current-members/5-prof-ofir-alon"><b>Alon group</b></a><br />University of Haifa, Israel';
-mymap.addLayer(marker1);
-oms.addMarker(marker1);
-marker1.on('mouseover', function(e){
-    popup.setContent(marker1.desc);
-    popup.setLatLng(marker1.getLatLng());
-    mymap.openPopup(popup);
-});    marker1.on('mouseout', function(e){ mymap.closePopup(); });
-var marker2 = new L.Marker.SVGMarker([32.2318851, -110.9501094], { iconOptions: { color: "rgb(0,0,100)" }});
-marker2.desc = '<a href="http://www.optics.arizona.edu/Anderson/default.htm"><b>Anderson group</b></a><br />University of Arizona, United States';
-mymap.addLayer(marker2);
-oms.addMarker(marker2);
-marker2.on('mouseover', function(e){
-    popup.setContent(marker2.desc);
-    popup.setLatLng(marker2.getLatLng());
-    mymap.openPopup(popup);
-});    marker2.on('mouseout', function(e){ mymap.closePopup(); });
-*/	
-	
-	
-	
-	
-	/*
-	var marker0 = new L.marker([51.5, -0.09]); //.openPopup();
-	marker0.desc = "<b>Hello world!</b><br />I am a popup.";
-	var marker2 = new L.Marker.SVGMarker([51.5, -1.09], { iconOptions: { color: "rgb(0,0,100)" }})
-	marker2.desc = "<b>Hello world2!</b><br />I am a popup.";
-	mymap.addLayer(marker0);
-	mymap.addLayer(marker2);
-	oms.addMarker(marker0);
-	oms.addMarker(marker2);
-	*/
-	
-	//var marker1 = new L.Marker([51.5, -1.09]).bindPopup("<b>Hello world2!</b><br />I am a popup.");
-	
-	/*for (var i = 0; i < window.mapData.length; i ++) {
-	  var datum = window.mapData[i];
-	  var loc = new L.LatLng(datum.lat, datum.lon);
-	  var marker = new L.Marker(loc);
-	  marker.desc = datum.d;
-	  mymap.addLayer(marker);
-	  oms.addMarker(marker);  // <-- here
-	}*/
-
-	
-
-
 
 </script>
 
