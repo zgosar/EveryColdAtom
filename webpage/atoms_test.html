@@ -21,7 +21,7 @@
 
 <h1 style="margin: auto; text-align: center;">Every Cold Atoms Experiment in the World</h1>
 
-<div id="mapid" style="width: 100%; height: 50%; max-width:800px; min-height:250px; margin:0 auto;"></div>
+<div id="mapid" style="width: 100%; height: 80%; max-width:800px; min-height:250px; margin:0 auto;"></div>
 <script>
 
 	/* In the first edition. Spiderify will be on click, not on hover. 
@@ -96,8 +96,22 @@
 	var layer_else = [];
 	
 	for (var i = 0; i < data.length; i++){
+		switch (data[i]['exp_theor']) {
+			case "Exp":
+				ccolor = "rgb(150,0,0)";
+				break;
+			case "Theory":
+				ccolor = "rgb(0,0,150)";
+				break;
+			case "Exp/Theory":
+				ccolor = "rgb(100,0,100)";
+				break;
+			default:
+				ccolor = "rgb(0,100,0)";
+				break;
+		}
 		var cmarker = new L.Marker.SVGMarker(
-			[data[i]['lat'], data[i]['long']], { iconOptions: { color: "rgb(0,0,100)" }}
+			[data[i]['lat'], data[i]['long']], { iconOptions: { color: ccolor }}
 			);
 		markers.push(cmarker) ;
 		markers[i].desc = data[i]['desc']

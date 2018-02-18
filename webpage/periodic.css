@@ -20,6 +20,9 @@ body {
   width: 5.55%;
   height: 100%;
 }
+.cell2x {
+  width: 11.1%;
+}
 .element {
   position: absolute;
   top: 0;
@@ -34,7 +37,7 @@ body {
   pointer-events: none;
   -webkit-transition: all 200ms ease;
   transition: all 200ms ease;
-  background-color: rgba(0, 128, 128, 0.6);
+  background-color: rgba(105,105,105, 0.6);
 }
 .cell:hover .element {
   border-color: rgba(0, 0, 0, 0.1);
@@ -43,8 +46,9 @@ body {
   transform: scale(3, 3); 
   /* Increases size by factor of 3. Unnecesarry, maybe remove because of mobile. */
   z-index: 1;
-  background-color: rgba(0, 128, 128, 0.9);
+  background-color: rgba(105,105,105, 0.9);
 }
+
 .at_num,
 .at_details {
   position: absolute;
@@ -52,6 +56,7 @@ body {
   color: rgba(255, 255, 255, 0.9);
   opacity: 0;
 }
+
 .at_num {
   top: 1px;
   right: 3px;
@@ -67,6 +72,22 @@ body {
   height: 9px;
   color: rgba(255, 255, 255, 0.9);
 }
+.cell:hover .element .at_num{
+  font-size: 5px;
+  opacity: 1;
+  top:0px;
+  right:0px;
+}
+.cell:hover .element .at_details{
+  opacity: 1;
+  font-size: 3px;
+  bottom:0px;
+}
+.cell:hover .element .symbol{
+  top: 40%;
+}
+
+
 .at_details {
   bottom: 4px;
   left: 0px;
@@ -74,10 +95,17 @@ body {
 }
 
 .available  {
-	background-color: rgba(255, 0, 0, 0.6);
+	background-color: rgba(255, 0, 0, 0.8);
 }
 .cell:hover .available{
-	background-color: rgba(255, 0, 0, 0.6);
+	background-color: rgba(255, 0, 0, 0.9);
+}
+
+.unchecked  {
+	background-color: rgba(150, 50, 50, 0.6);
+}
+.cell:hover .unchecked{
+	background-color: rgba(150, 50, 50, 0.9);
 }
 
 
@@ -132,12 +160,17 @@ body {
   -ms-transform-origin: 50% 100%;
   transform-origin: 50% 100%;
 }
+.periodic-row:nth-child(1) .cell .element {
+  -webkit-transform-origin: 50% 0;
+  -ms-transform-origin: 50% 0;
+  transform-origin: 50% 0;
+}
 .periodic-row:nth-child(1) .cell:nth-child(1) .element {
   -webkit-transform-origin: 0 0;
   -ms-transform-origin: 0 0;
   transform-origin: 0 0;
 }
-.periodic-row:nth-child(1) .cell:nth-child(18) .element {
+.periodic-row:nth-child(1) .cell:nth-child(15) .element { /*He is not pos 18, but pos 15 because we removed 3 spaces.*/
   -webkit-transform-origin: 100% 0;
   -ms-transform-origin: 100% 0;
   transform-origin: 100% 0;
@@ -190,7 +223,7 @@ body {
   }  
   
 }
-@media (min-width: 992px) {
+@media (min-width: 1000px) {
   .periodic {
     height: 680px;
   }
@@ -217,4 +250,8 @@ body {
   .symbol {
     font-size: 30px;
   }
+}
+
+.cell2x .element .symbol{
+  font-size: 15px;
 }
