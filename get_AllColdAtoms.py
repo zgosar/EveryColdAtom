@@ -118,16 +118,18 @@ class GroupClass:
             'people', 'atom', 'comment']
         return ';'.join(all_vars) + '\n'
 
-    def get_from_csv(self, line):
-        line = line.strip()
+    def get_from_csv(self, line, sep=';'):
+        line = line.strip('\n')
+        #print(line.split(sep))
         (self.name, self.webpage, self.institution,
             self.country, self.address, self.lat,
             self.long, self.exp_theor, self.fields,
-            self.people, self.atom, self.comment) = line.split(';')
+            self.people, self.atom, self.comment) = line.split(sep)
         self.lat = float(self.lat)
         self.long = float(self.long)
 
     def get_from_csv2(self, line):
+        print(len(line))
         (self.name, self.webpage, self.institution,
             self.country, self.address, self.lat,
             self.long, self.exp_theor, self.fields,
@@ -202,6 +204,57 @@ class GroupClass:
         ret['atom'] = self.atom
         ret['exp_theor'] = self.exp_theor
         return ret
+
+    def html_header_line(self):
+        ret = """<div class="tg-wrap"><table id="tg-tg00" class="tg">
+<tr>
+    <th class="tg-tg01">Group</th>
+    <th class="tg-tg02">Institution</th>
+    <th class="tg-tg03">Country</th>
+    <th class="tg-tg04">Lat</th>
+    <th class="tg-tg05">Long</th>
+    <th class="tg-tg06">Exp/Theory</th>
+    <th class="tg-tg07">Description</th>
+    <th class="tg-tg08">People</th>
+    <th class="tg-tg09">Atoms</th>
+    <th class="tg-tg10">Comment</th>
+  </tr>
+"""
+        return ret
+
+    def html_ending_line(self):
+        ret = """</table></div>"""
+        return ret
+
+    
+    def html_line(self):
+        ret = ''
+        ret = """  <tr>
+    <td class="tg-tg{0:02d}"><a href="{webpage}"><b>{name}</b></a></td>
+    <td class="tg-tg{1:02d}">{institution}</td>
+    <td class="tg-tg{2:02d}">{country}</td>
+    <td class="tg-tg{3:02d}">{lat}</td>
+    <td class="tg-tg{4:02d}">{long}</td>
+    <td class="tg-tg{5:02d}">{exp_theor}</td>
+    <td class="tg-tg{6:02d}"><div class="makescrollable">{desc}</div></td>
+    <td class="tg-tg{7:02d}"><div class="makescrollable">{people}</div></td>
+    <td class="tg-tg{8:02d}">{atoms}</td>
+    <td class="tg-tg{9:02d}">{comment}</td>
+
+  </tr>
+""".format(*list(range(1,13)),
+           name=self.name, webpage=self.webpage,
+           institution=self.institution,
+           country=self.country,
+           lat=self.lat,
+           long=self.long,
+           exp_theor=self.exp_theor,
+           desc=self.fields,
+           atoms=self.atom,
+           people=self.people,
+           comment=self.comment)
+        return ret
+           
         
 
 ######################################################################
@@ -271,14 +324,15 @@ if 0: # convert to javascript
                 a.get_from_csv(line)
                 out_file.write(a.to_marker(i))
 
-if 1: # convert to json like format
-    with open('ucan_utoronto_database_production_with_geocode-edited2.csv', 'r') as in_file:
-        with open('json_data.js', 'w') as out_file:
+if 0: # convert to json like format
+    with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
+              'r', encoding="utf8") as in_file:
+        with open('json_data.js', 'w', encoding="utf8") as out_file:
             in_file.readline()
             tmp_list = []
             for i, line in enumerate(in_file):
                 a = GroupClass()
-                a.get_from_csv(line)
+                a.get_from_csv(line, sep='	')
                 tmp_list.append(a.json_data())
                 #print(tmp_list[-1])
                 #json.dumps(tmp_list[-1])
@@ -287,9 +341,10 @@ if 1: # convert to json like format
 if 0: # convert to json like format with new csv
     # does not work.
     import csv
-    with open('ucan_utoronto_database_production_with_geocode_edited.csv', 'r', newline='') as in_file:
+    with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
+              'r', newline='', encoding="utf8") as in_file:
         with open('json_data.js', 'w') as out_file:
-            in_data = csv.reader(in_file, delimiter=';')
+            in_data = csv.reader(in_file)
             #print(in_data[0])
             #in_data.pop(0)
             tmp_list = []
@@ -302,4 +357,39 @@ if 0: # convert to json like format with new csv
                 #json.dumps(tmp_list[-1])
             json.dump(tmp_list, out_file, ensure_ascii=False)
 
+if 0: # convert to html table.
+    with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
+              'r', encoding="utf8") as in_file:
+        with open('webpage/generated_table_part.html', 'w', encoding="utf8") as out_file:
+            in_file.readline()
+            tmp_list = ""
+            a = GroupClass()
+            out_file.write(a.html_header_line())
+            for i, line in enumerate(in_file):
+                a = GroupClass()
+                a.get_from_csv(line, sep='	')
+                out_file.write(a.html_line())
+                #print(tmp_list[-1])
+                #json.dumps(tmp_list[-1])
+            #json.dump(tmp_list, out_file, ensure_ascii=False)
+            out_file.write(a.html_ending_line())
                         
+if 1: #combine htmls
+    print('Combining htmls')
+    with open('webpage/index.html', 'w', encoding="utf8") as out_file:
+        inlist = ['head_part.html', 'header_part.html',
+                  'atoms_part.html',
+                  'periodic_part.html',
+                  'table_before_part.html', 'generated_table_part.html',
+                  'footer_part.html']
+        for infile in inlist:
+            with open('webpage/' + infile, 'r', encoding="utf8") as in_file:
+                out_file.write(in_file.read())
+    print('Combined htmls')      
+            
+if 0: # generate checkboxes
+    elements = 'H He Li Na K Rb Cs Ca Sr Cr Dy Er Yb Th Ba'.split()
+    basestr = """<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="{:}" checked>{:}</label>"""
+    for i in elements:
+        print(basestr.format(i, i))
+    
