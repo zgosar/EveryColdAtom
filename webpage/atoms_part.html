@@ -90,6 +90,7 @@
 		var cmarker = new L.Marker.SVGMarker(
 			[data[i]['lat'], data[i]['long']], { iconOptions: { color: ccolor }}
 			);
+		//console.log(data[i]['index'], i, data[i]['index'] == i)
 		markers.push(cmarker) ;
 		markers[i].desc = data[i]['desc']
 		switch (data[i]['exp_theor']) {

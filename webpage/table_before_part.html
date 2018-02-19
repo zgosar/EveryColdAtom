@@ -15,20 +15,24 @@
 <label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Ca" id="checkCa" checked>Ca</label>
 <label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Sr" id="checkSr" checked>Sr</label>
 <label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Cr" id="checkCr" checked>Cr</label>
+<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Cd" id="checkCd" checked>Cd</label>
 <label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Dy" id="checkDy" checked>Dy</label>
+<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Ho" id="checkHo" checked>Ho</label>
 <label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Er" id="checkEr" checked>Er</label>
 <label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Yb" id="checkYb" checked>Yb</label>
 <label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Th" id="checkTh" checked>Th</label>
 <label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Ba" id="checkBa" checked>Ba</label>
 <label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="unknown" id="checkunknown" checked>unknown</label>
 <label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="theory" id="checktheory" checked>theory</label>
+<label><input type='button' onclick='handleClick(this);' name="incheckbox" value="Select all atoms" id="checkallKnown" checked></label>
+<label><input type='button' onclick='handleClick(this);' name="incheckbox" value="Select all (incl. unknown and theory)." id="checkselectAll" checked></label>
+<label><input type='button' onclick='handleClick(this);' name="incheckbox" value="Select none" id="checkselectNone" checked></label>
 </div>
 
 <script>
-// todo connect map and filters. This requires giving everything ids. Table rows and popups on map.
-// todo connect periodic table and filters in both directions.
 
 function elegible(td, input){
+	/* Check if the current table row is compliant with the selected atom filters. */
 	if (td.innerHTML.toUpperCase() == '') return true;
 	if (td.innerHTML.toUpperCase() == 'UNKNOWN') {
 		for (i = 0; i < input.length; i++){
@@ -49,11 +53,13 @@ function elegible(td, input){
 			if (input[i].value == 'H'){
 				hloc = td.innerHTML.toUpperCase().indexOf(input[i].value.toUpperCase());
 				heloc = td.innerHTML.toUpperCase().indexOf('HE');
+				holoc = td.innerHTML.toUpperCase().indexOf('HO');
 				thloc = td.innerHTML.toUpperCase().indexOf('TH');
-				
-				if (hloc > -1 && heloc != hloc && thloc+1 != hloc){
+				if (hloc > -1 && heloc != hloc && holoc != hloc && thloc+1 != hloc){
 					console.log(hloc, heloc, thloc);
-					// TODO this is not foolproof. Example He, H will return false. But so far there are no Hydrogens.
+					/* TODO this is not foolproof. Example He, H will return false. But so far there are no Hydrogens.
+					TMP fix: H must be the first in the sequence.
+					*/
 					return true;
 				}
 				continue;
@@ -67,7 +73,7 @@ function elegible(td, input){
 }
 
 function elegibleExpTheory(td, input){
-	//console.log(td, input);
+	/* Check if the current table row is compliant with the selected exp/theory filters. */
 	for (i = 0; i < input.length; i++){
 		if (input[i].checked && td.innerHTML == input[i].value){ return true; }
 	}
@@ -76,7 +82,6 @@ function elegibleExpTheory(td, input){
 
 function filterAtoms() {
   console.log("Filtering atoms");
-  // Declare variables 
   var inputAtom, inputExp, filter, table, tr, td, i;
   inputAtom = document.getElementsByName('incheckbox');
   inputExp = document.getElementsByName('exptheorycheckbox');
@@ -86,19 +91,27 @@ function filterAtoms() {
   // Loop through all table rows, and hide those who don't match the search query
   for (i = 0; i < tr.length; i++) {
 	
-    tdAtom = tr[i].getElementsByTagName("td")[8]; // change to correct index
-	tdExp = tr[i].getElementsByTagName("td")[5]; // change to correct index
-    if (tdAtom) { /* this was if (td) but not sure if necessary to check if both. Treats th differently. */
-	//console.log(tr[i].getElementsByTagName("td")[0].innerHTML);
+    tdAtom = tr[i].getElementsByTagName("td")[6]; // change to correct index if changing order of columns.
+	tdExp = tr[i].getElementsByTagName("td")[5]; // change to correct index if changing order of columns.
+    if (tdAtom) { /* this was if (td) but not sure if necessary to check if both. This if is to treat th(table header) differently. */
+	  index = tr[i].getElementsByTagName("td")[10].innerHTML;
       if (elegible(tdAtom, inputAtom) && elegibleExpTheory(tdExp, inputExp)) {
         tr[i].style.display = "";
+		if (!mymap.hasLayer(markers[index])){
+			markers[index].addTo(mymap);
+			//oms.addMarker(markers[i]);
+		}
       } else {
         tr[i].style.display = "none";
+		if (mymap.hasLayer(markers[index])){
+			markers[index].remove();
+			//oms.remove(markers[i]);
+		}
       }
     } 
   }
   
-  /* Update map checkboxes */
+    /* Update map layer select checkboxes. */
 	for (i = 0; i < inputExp.length; i++){
 		if (inputExp[i].value == "Exp"){
 			if (inputExp[i].checked) layer_exp.addTo(mymap);
@@ -114,8 +127,7 @@ function filterAtoms() {
 		}
 	}
 	
-	/* update periodic table */
-	// document.getElementById("MyElement").className = "MyClass";
+	/* Update periodic table. */
 	for (i = 0; i < inputAtom.length; i++){
 		if(document.getElementById("periodic" + inputAtom[i].value)){
 			if (inputAtom[i].checked) document.getElementById("periodic" + inputAtom[i].value).className = "element available";
@@ -128,6 +140,19 @@ function filterAtoms() {
 <script>
 function handleClick(cb) {
   //console.log("Clicked, new value = " + cb.checked, cb.name, cb.value);
+  if (cb.value == "Select all atoms"){
+	inputAtom = document.getElementsByName('incheckbox');
+	for (i = 0; i < inputAtom.length; i++){ if (inputAtom[i].value != 'unknown' && inputAtom[i].value != 'theory') inputAtom[i].checked = true; }
+  }
+  if (cb.value == "Select all (incl. unknown and theory)."){
+	inputAtom = document.getElementsByName('incheckbox');
+	for (i = 0; i < inputAtom.length; i++){ inputAtom[i].checked = true; }
+  }
+  if (cb.value == "Select none"){
+	inputAtom = document.getElementsByName('incheckbox');
+	for (i = 0; i < inputAtom.length; i++){ inputAtom[i].checked = false; }
+  }
+    
   filterAtoms();
 }
 
@@ -142,31 +167,8 @@ function periodicClick(loc){
 
 </script>
 
-
-<script>
-function myFunction() {
-  // Declare variables 
-  var input, filter, table, tr, td, i;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("tg-tg00");
-  tr = table.getElementsByTagName("tr");
-
-  // Loop through all table rows, and hide those who don't match the search query
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
-      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    } 
-  }
-}
-</script>
-
 <script type="text/javascript" charset="utf-8">
+/* Sort */
 var TgTableSort=window.TgTableSort||function(n, t) {
     "use strict";
     function r(n, t) {

@@ -115,6 +115,9 @@ table th.tg-sort-desc:after {
 	min-width: 150px;
 	max-width: 150px;
 }
+.tg-tg11 {
+	display: none;
+}
 
 .makescrollable{
 	max-height: 200px;
