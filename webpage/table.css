@@ -1,3 +1,9 @@
+/* Not sure if I want this. This makes the table scroll left-right independently from the rest of the page.
+.tg-wrap{
+  overflow-x: scroll;
+}
+*/
+
 .tg {
 	border-collapse: collapse;
 	border-spacing: 0;

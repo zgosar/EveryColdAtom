@@ -7,7 +7,7 @@
 .filterExpTheorycheckbox {
   color: rgb(255, 255, 255);
   width: 33.33%;
-  display: table-cell;;
+  display: table-cell;
   /* Why doesn't notepad++ color the next two? */
   /* align-items: center;
   justify-content: center; */
@@ -63,7 +63,7 @@
   min-width: 10em;
 }
 
- #AtomCheckboxes input[type=button]{
+ #AtomButtons input[type=button]{
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -79,7 +79,7 @@
   display: inline-block;
   font-size: 16px;
   cursor: pointer;
-  display: table-cell;
+  /*display: table-cell;*/
   vertical-align: middle;
   text-align: center;
   font-size:12px;
@@ -96,7 +96,7 @@
 }
 
 @media (min-width: 700px) {
-  .filtercheckbox, .filterExpTheorycheckbox, #AtomCheckboxes input[type=button] {
+  .filtercheckbox, .filterExpTheorycheckbox, #AtomButtons input[type=button] {
     font-size:18px;
   }
 }
