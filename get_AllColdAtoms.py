@@ -199,6 +199,7 @@ class GroupClass:
             i, name=self.name.replace('\'', '\\\''), webpage=self.webpage.replace('\'', '\\\''),
             institution=self.institution.replace('\'', '\\\''), country=self.country)
         ret['desc'] += '<b>Research:</b> {:}<br />{:}<br />'.format(self.exp_theor, self.fields)
+        ret['desc'] += '<b>Atoms:</b> {:}<br />'.format(self.atom)
         ret['desc'] += '<b>Permanent researchers and staff:</b> {:}<br />'.format(self.people)
         ret['desc'] += '<b>Editors note:</b> {:}<br />'.format(self.comment)
         ret['atom'] = self.atom
@@ -333,6 +334,7 @@ if 0: # convert to json like format
     with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
               'r', encoding="utf8") as in_file:
         with open('json_data.js', 'w', encoding="utf8") as out_file:
+            out_file.write('var data =')
             in_file.readline()
             tmp_list = []
             for i, line in enumerate(in_file):
