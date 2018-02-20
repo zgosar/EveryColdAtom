@@ -1,34 +1,3 @@
-<div id='ExpTheoryCheckboxes'>
-<label><input type='checkbox' onclick='handleClick(this);' name="exptheorycheckbox" value="Exp" id="checkExp" checked>Exp</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="exptheorycheckbox" value="Theory" id="checkTheory" checked>Theory</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="exptheorycheckbox" value="Exp/Theory" id="checkExp/Theory" checked>Exp/Theory</label>
-</div>
-
-<div id='AtomCheckboxes'>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="H" id="checkH" checked>H</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="He" id="checkHe" checked>He</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Li" id="checkLi" checked>Li</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Na" id="checkNa" checked>Na</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="K" id="checkK" checked>K</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Rb" id="checkRb" checked>Rb</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Cs" id="checkCs" checked>Cs</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Ca" id="checkCa" checked>Ca</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Sr" id="checkSr" checked>Sr</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Cr" id="checkCr" checked>Cr</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Cd" id="checkCd" checked>Cd</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Dy" id="checkDy" checked>Dy</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Ho" id="checkHo" checked>Ho</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Er" id="checkEr" checked>Er</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Yb" id="checkYb" checked>Yb</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Th" id="checkTh" checked>Th</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="Ba" id="checkBa" checked>Ba</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="unknown" id="checkunknown" checked>unknown</label>
-<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="theory" id="checktheory" checked>theory</label>
-<label><input type='button' onclick='handleClick(this);' name="incheckbox" value="Select all atoms" id="checkallKnown" checked></label>
-<label><input type='button' onclick='handleClick(this);' name="incheckbox" value="Select all (incl. unknown and theory)." id="checkselectAll" checked></label>
-<label><input type='button' onclick='handleClick(this);' name="incheckbox" value="Select none" id="checkselectNone" checked></label>
-</div>
-
 <script>
 
 function elegible(td, input){
@@ -56,7 +25,7 @@ function elegible(td, input){
 				holoc = td.innerHTML.toUpperCase().indexOf('HO');
 				thloc = td.innerHTML.toUpperCase().indexOf('TH');
 				if (hloc > -1 && heloc != hloc && holoc != hloc && thloc+1 != hloc){
-					console.log(hloc, heloc, thloc);
+					//console.log(hloc, heloc, thloc);
 					/* TODO this is not foolproof. Example He, H will return false. But so far there are no Hydrogens.
 					TMP fix: H must be the first in the sequence.
 					*/
@@ -75,6 +44,7 @@ function elegible(td, input){
 function elegibleExpTheory(td, input){
 	/* Check if the current table row is compliant with the selected exp/theory filters. */
 	for (i = 0; i < input.length; i++){
+	    //console.log(input[i].checked, td.innerHTML,  input[i].value);
 		if (input[i].checked && td.innerHTML == input[i].value){ return true; }
 	}
 	return false;
@@ -140,15 +110,15 @@ function filterAtoms() {
 <script>
 function handleClick(cb) {
   //console.log("Clicked, new value = " + cb.checked, cb.name, cb.value);
-  if (cb.value == "Select all atoms"){
+  if (cb.id == "checkallKnown"){
 	inputAtom = document.getElementsByName('incheckbox');
 	for (i = 0; i < inputAtom.length; i++){ if (inputAtom[i].value != 'unknown' && inputAtom[i].value != 'theory') inputAtom[i].checked = true; }
   }
-  if (cb.value == "Select all (incl. unknown and theory)."){
+  if (cb.id == "checkselectAll"){
 	inputAtom = document.getElementsByName('incheckbox');
 	for (i = 0; i < inputAtom.length; i++){ inputAtom[i].checked = true; }
   }
-  if (cb.value == "Select none"){
+  if (cb.id == "checkselectNone"){
 	inputAtom = document.getElementsByName('incheckbox');
 	for (i = 0; i < inputAtom.length; i++){ inputAtom[i].checked = false; }
   }

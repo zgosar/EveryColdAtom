@@ -168,7 +168,7 @@ class GroupClass:
 
     def to_marker(self, i):
         """
-        Converts self to javascript marker object
+        Converts self to javascript marker object. Obsolete. Now use json_data()
         """
         ret = ""
         ret += 'var marker{:} = new L.Marker.SVGMarker([{:}, {:}],'.format(
@@ -191,7 +191,7 @@ class GroupClass:
 """
         return ret
 
-    def json_data(self):
+    def json_data(self, index):
         ret = dict()
         ret['lat'] = self.lat
         ret['long'] = self.long
@@ -203,6 +203,7 @@ class GroupClass:
         ret['desc'] += '<b>Editors note:</b> {:}<br />'.format(self.comment)
         ret['atom'] = self.atom
         ret['exp_theor'] = self.exp_theor
+        ret['index'] = index
         return ret
 
     def html_header_line(self):
@@ -214,10 +215,11 @@ class GroupClass:
     <th class="tg-tg04">Lat</th>
     <th class="tg-tg05">Long</th>
     <th class="tg-tg06">Exp/Theory</th>
+    <th class="tg-tg09">Atoms</th>
     <th class="tg-tg07">Description</th>
     <th class="tg-tg08">People</th>
-    <th class="tg-tg09">Atoms</th>
     <th class="tg-tg10">Comment</th>
+    <th class="tg-tg11">Index</th>
   </tr>
 """
         return ret
@@ -227,7 +229,7 @@ class GroupClass:
         return ret
 
     
-    def html_line(self):
+    def html_line(self, index):
         ret = ''
         ret = """  <tr>
     <td class="tg-tg{0:02d}"><a href="{webpage}"><b>{name}</b></a></td>
@@ -236,13 +238,14 @@ class GroupClass:
     <td class="tg-tg{3:02d}">{lat}</td>
     <td class="tg-tg{4:02d}">{long}</td>
     <td class="tg-tg{5:02d}">{exp_theor}</td>
+    <td class="tg-tg{8:02d}">{atoms}</td>
     <td class="tg-tg{6:02d}"><div class="makescrollable">{desc}</div></td>
     <td class="tg-tg{7:02d}"><div class="makescrollable">{people}</div></td>
-    <td class="tg-tg{8:02d}">{atoms}</td>
     <td class="tg-tg{9:02d}">{comment}</td>
+    <td class="tg-tg{10:02d}">{index}</td>
 
   </tr>
-""".format(*list(range(1,13)),
+""".format(*list(range(1,12)),
            name=self.name, webpage=self.webpage,
            institution=self.institution,
            country=self.country,
@@ -252,7 +255,8 @@ class GroupClass:
            desc=self.fields,
            atoms=self.atom,
            people=self.people,
-           comment=self.comment)
+           comment=self.comment,
+           index=index)
         return ret
            
         
@@ -325,6 +329,7 @@ if 0: # convert to javascript
                 out_file.write(a.to_marker(i))
 
 if 0: # convert to json like format
+    print("Generating json.")
     with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
               'r', encoding="utf8") as in_file:
         with open('json_data.js', 'w', encoding="utf8") as out_file:
@@ -332,14 +337,15 @@ if 0: # convert to json like format
             tmp_list = []
             for i, line in enumerate(in_file):
                 a = GroupClass()
-                a.get_from_csv(line, sep='	')
-                tmp_list.append(a.json_data())
+                #print(line)
+                a.get_from_csv(line, sep='	')#'	')
+                tmp_list.append(a.json_data(i))
                 #print(tmp_list[-1])
                 #json.dumps(tmp_list[-1])
             json.dump(tmp_list, out_file, ensure_ascii=False)
 
 if 0: # convert to json like format with new csv
-    # does not work.
+    # does not work.!!!!!!!!!!!!!!!!!!!!!!!!!!!
     import csv
     with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
               'r', newline='', encoding="utf8") as in_file:
@@ -349,7 +355,7 @@ if 0: # convert to json like format with new csv
             #in_data.pop(0)
             tmp_list = []
             for i, line in enumerate(in_file):
-                print(line)
+                #print(line)
                 a = GroupClass()
                 a.get_from_csv2(line)
                 tmp_list.append(a.json_data())
@@ -358,6 +364,7 @@ if 0: # convert to json like format with new csv
             json.dump(tmp_list, out_file, ensure_ascii=False)
 
 if 0: # convert to html table.
+    print('Generating html table')
     with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
               'r', encoding="utf8") as in_file:
         with open('webpage/generated_table_part.html', 'w', encoding="utf8") as out_file:
@@ -367,8 +374,8 @@ if 0: # convert to html table.
             out_file.write(a.html_header_line())
             for i, line in enumerate(in_file):
                 a = GroupClass()
-                a.get_from_csv(line, sep='	')
-                out_file.write(a.html_line())
+                a.get_from_csv(line, sep='	')#'	')
+                out_file.write(a.html_line(i))
                 #print(tmp_list[-1])
                 #json.dumps(tmp_list[-1])
             #json.dump(tmp_list, out_file, ensure_ascii=False)
@@ -379,6 +386,7 @@ if 1: #combine htmls
     with open('webpage/index.html', 'w', encoding="utf8") as out_file:
         inlist = ['head_part.html', 'header_part.html',
                   'atoms_part.html',
+                  'legendfilter.html', 
                   'periodic_part.html',
                   'table_before_part.html', 'generated_table_part.html',
                   'footer_part.html']
