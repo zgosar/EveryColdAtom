@@ -1,4 +1,28 @@
 <script>
+function hideshowPeriodic(input){
+  periodicelement = document.getElementById("PeriodicID");
+  console.log(periodicelement);
+  if (periodicelement.className == "periodic periodicshown") {
+    periodicelement.className = "periodic periodichidden";
+  }
+  else {
+    periodicelement.className = "periodic periodicshown";
+	
+  }
+}
+
+function hideshowTable(input){
+  periodicelement = document.getElementById("tg-wrap-id");
+  console.log(periodicelement);
+  if (periodicelement.className == "tg-wrap tg-wrap-shown") {
+    periodicelement.className = "tg-wrap tg-wrap-hidden";
+  }
+  else {
+    periodicelement.className = "tg-wrap tg-wrap-shown";
+	
+  }
+}
+
 
 function elegible(td, input){
 	/* Check if the current table row is compliant with the selected atom filters. */
@@ -287,3 +311,7 @@ document.addEventListener("DOMContentLoaded", function(n) {
 
 );
 </script>
+
+<div id='hideShowTableDiv'>
+<input type='button' onclick='hideshowTable(this);' name="shtable" value="Hide/Show table" id="hideShowTable">
+</div>

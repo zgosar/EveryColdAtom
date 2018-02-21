@@ -4,6 +4,14 @@
 }
 */
 
+.tg-wrap-shown{
+  display: block;
+}
+
+.tg-wrap-hidden{
+  display: none;
+}
+
 .tg {
 	border-collapse: collapse;
 	border-spacing: 0;

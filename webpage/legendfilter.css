@@ -24,6 +24,7 @@
   border-style: solid;
   border-color: white;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 #AtomCheckboxes{
@@ -55,6 +56,7 @@
   border-style: solid;
   border-color: white;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .filtercheckboxU, .filtercheckboxT {
@@ -77,7 +79,7 @@
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  /* font-size: 16px; */ 
   cursor: pointer;
   /*display: table-cell;*/
   vertical-align: middle;
@@ -144,6 +146,32 @@ input[type=checkbox]:checked+.filtercheckbox{ /* Label after the checked checkbo
 }
 
 input[type=checkbox]:checked+.filterExpTheorycheckbox{ /* Label after the checked checkbox.*/
+  font-weight: bold;
+}
+
+#hideShowPeriodic, #hideShowTable{
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  /* makes border on the inside, not outside */
+  border-width: 1px;
+  border-style: solid;
+  border-color: white;
+  border-radius: 5px;
+  background-color: rgb(200, 200, 200);
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  /* font-size: 16px; */
+  cursor: pointer;
+  /*display: table-cell;*/
+  vertical-align: middle;
+  text-align: center;
+  font-size:12px;
+  height:28px;
+  width: 33.33%;
+  padding: 0px;
   font-weight: bold;
 }
 
