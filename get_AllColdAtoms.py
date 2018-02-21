@@ -37,6 +37,7 @@ class GroupClass:
         Copies the attributes from other to self.
         Skips empty attributes from other.
         Skips attributes defined in both if priority == self.
+        Never tested.
         """
         for field in self.__dict__.keys():
             if (other.__dict__[field] != GroupClass.defaults[field]):
@@ -62,7 +63,7 @@ class GroupClass:
         if len(institution) == 0:
             self.institution = GroupClass.defaults['institution']
         else:
-            self.institution = institution[0].text.strip()
+            self.institution = institution[0].text.strip().replace(';', ' ')
 
         country = thediv.find_all("span", {"class": "country"})
         if len(country) == 0:
@@ -81,16 +82,17 @@ class GroupClass:
             self.fields = GroupClass.defaults['fields']
         else:
             self.fields = fields[0].text.strip().replace(';', ',,').replace('\n', '        ')
-            # to je res bolj description, ne tolk seznam fieldov.
+            # Replacements are maybe not necessary, but needed for backwards compatibility.
 
         people = thediv.find_all("span", {"class": "people"})
         if len(people) == 0:
             self.people = GroupClass.defaults['people']
         else:
             self.people = people[0].text.strip().replace(';', ',,').replace('\n', '        ')
+            # Replacements are maybe not necessary, but needed for backwards compatibility.
 
         self.webpage = thediv.find('div', {'class': "group_homepage"}).a['href']
-        # maybe I should use find instead of find_all the whole time!
+        # Maybe I should be using find instead of find_all the whole time! Too late now.
 
         self.atom = ''
 
@@ -102,7 +104,8 @@ class GroupClass:
         
         return thediv
 
-    def csv(self): # should probably use built-in csv writer.
+    def csv(self): # Should probably use built-in csv writer.
+        """ Export csv line """
         all_vars = [self.name, self.webpage, self.institution,
             self.country, self.address, self.lat, self.long,
             self.exp_theor, self.fields,
@@ -112,6 +115,7 @@ class GroupClass:
         return ';'.join(all_vars) + '\n'
 
     def csv_header(self):
+        """ Export csv header line """
         all_vars = ['name', 'webpage', 'institution',
             'country', 'address', 'lat', 'long',
             'exp_theor', 'fields',
@@ -129,6 +133,7 @@ class GroupClass:
         self.long = float(self.long)
 
     def get_from_csv2(self, line):
+        """ Line is a list from csv module. Doesn't really work. """
         print(len(line))
         (self.name, self.webpage, self.institution,
             self.country, self.address, self.lat,
@@ -139,6 +144,7 @@ class GroupClass:
 
 
     def __eq__(self, other):
+        """ Never tested. """
         all_vars = [self.name, self.webpage, self.institution,
             self.country, self.address, self.lat, self.long,
             self.exp_theor, self.fields,
@@ -153,6 +159,7 @@ class GroupClass:
         return True
 
     def geocode(self, gmaps, verbose=True):
+        """ Get location from address using Google Maps API. """
         querry = self.institution + ', ' + self.country
         if verbose: print('Querry:', querry)
 
@@ -192,6 +199,9 @@ class GroupClass:
         return ret
 
     def json_data(self, index):
+        """ Converts everything into a dict that is exported as json and used to create
+        all markers on the map
+        """
         ret = dict()
         ret['lat'] = self.lat
         ret['long'] = self.long
@@ -208,6 +218,7 @@ class GroupClass:
         return ret
 
     def html_header_line(self):
+        """ Exports the header line in the html table on the webpage. """
         ret = """<div class="tg-wrap"><table id="tg-tg00" class="tg">
 <tr>
     <th class="tg-tg01">Group</th>
@@ -226,11 +237,13 @@ class GroupClass:
         return ret
 
     def html_ending_line(self):
+        """ Exports the ending line in the html table on the webpage. """
         ret = """</table></div>"""
         return ret
 
     
     def html_line(self, index):
+        """ Exports a line in the html table on the webpage. """
         ret = ''
         ret = """  <tr>
     <td class="tg-tg{0:02d}"><a href="{webpage}"><b>{name}</b></a></td>
@@ -270,7 +283,7 @@ add to production. Hopefully.
 """
 ######################################################################
 
-if 0: # load all        
+if 0: # load all from ucan      
     base_url = 'https://ucan.physics.utoronto.ca/Groups'
     r = requests.get(base_url)
     soup = BeautifulSoup(r.text, 'html.parser')
@@ -282,7 +295,7 @@ if 0: # load all
     a = GroupClass()
 
     count = 0
-    with open('ucan_utoronto_database.csv', 'w', encoding="utf-8") as f:
+    with open('ucan_utoronto_database_test20180221.csv', 'w', encoding="utf-8") as f:
         # you must open the file in notepad++ and "Convert to UTF-8" so that special characters really work.
         f.write(a.csv_header())
         for row in thetable.children:
@@ -295,10 +308,6 @@ if 0: # load all
 
     url = 'https://ucan.physics.utoronto.ca/Groups/group.2005-07-11.4942545460/view'
     #b = a.get_from_utoronto(url)
-
-# Todo geocode with better names.
-# Currently some insitution names are cities.
-# Issues: Multiple groups at the same institution.
 
 if 0: #geocode
     import googlemaps
@@ -320,7 +329,7 @@ if 0: #geocode
             #print(len(geocode_result))
             #print(geocode_result[0]['geometry']['location'])
 
-if 0: # convert to javascript
+if 0: # convert to javascript. Obsolete
     with open('ucan_utoronto_database_production_with_geocode.csv', 'r') as in_file:
         with open('markers.js', 'w') as out_file:
             in_file.readline()
@@ -333,7 +342,7 @@ if 0: # convert to json like format
     print("Generating json.")
     with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
               'r', encoding="utf8") as in_file:
-        with open('json_data.js', 'w', encoding="utf8") as out_file:
+        with open('webpage/json_data.js', 'w', encoding="utf8") as out_file:
             out_file.write('var data =')
             in_file.readline()
             tmp_list = []
@@ -342,25 +351,6 @@ if 0: # convert to json like format
                 #print(line)
                 a.get_from_csv(line, sep='	')#'	')
                 tmp_list.append(a.json_data(i))
-                #print(tmp_list[-1])
-                #json.dumps(tmp_list[-1])
-            json.dump(tmp_list, out_file, ensure_ascii=False)
-
-if 0: # convert to json like format with new csv
-    # does not work.!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    import csv
-    with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
-              'r', newline='', encoding="utf8") as in_file:
-        with open('json_data.js', 'w') as out_file:
-            in_data = csv.reader(in_file)
-            #print(in_data[0])
-            #in_data.pop(0)
-            tmp_list = []
-            for i, line in enumerate(in_file):
-                #print(line)
-                a = GroupClass()
-                a.get_from_csv2(line)
-                tmp_list.append(a.json_data())
                 #print(tmp_list[-1])
                 #json.dumps(tmp_list[-1])
             json.dump(tmp_list, out_file, ensure_ascii=False)
@@ -398,6 +388,7 @@ if 1: #combine htmls
     print('Combined htmls')      
             
 if 0: # generate checkboxes
+    # Used only once.
     elements = 'H He Li Na K Rb Cs Ca Sr Cr Dy Er Yb Th Ba'.split()
     basestr = """<label><input type='checkbox' onclick='handleClick(this);' name="incheckbox" value="{:}" checked>{:}</label>"""
     for i in elements:
