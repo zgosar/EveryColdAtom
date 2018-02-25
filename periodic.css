@@ -1,0 +1,342 @@
+body {
+  font-family: Arial;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.periodichidden {
+  display: none;
+}
+
+.periodicshown {
+  display: block;
+}
+
+.periodic {
+  position: relative;
+  height: 250px;
+  margin-right: -1px;
+  text-shadow: none;
+
+}
+.periodic-row {
+  clear: both;
+  height: 10%;
+}
+.cell {
+  float: left;
+  position: relative;
+  width: 5.55%;
+  height: 100%;
+}
+.cell2x {
+  width: 11.1%;
+}
+.cell2x .element .symbol{
+  font-size: 6px;
+}
+
+.element {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 1px;
+  right: 1px;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 4px rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  text-align: center;
+  cursor: pointer;
+  pointer-events: none; /* If this is not-commented: When an element is hover-ed, the surrounding elements are coverd with the current.
+  When you move mouse over a neighbouring element, that-one expands. If this is commented, the neighbouring element doesn't expand. */
+  -webkit-backface-visibility: hidden;
+  -webkit-transition: all 200ms ease;
+  transition: all 200ms ease;
+  background-color: rgba(105,105,105, 0.6);
+}
+
+
+.at_num,
+.at_details {
+  position: absolute;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.9);
+  opacity: 0;
+}
+
+.at_num {
+  top: 1px;
+  right: 3px;
+}
+.symbol {
+  position: absolute;
+  top: 50%;
+  left: 0px;
+  right: 0px;
+  margin-top: -4px;
+  font-size: 9px;
+  line-height: 1;
+  height: 9px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cell:hover .element {
+  border-color: rgba(0, 0, 0, 0.1);
+  -webkit-transform: scale(3, 3);
+  -ms-transform: scale(3, 3);
+  transform: scale(3, 3); 
+  /* Increases size by factor of 3. Unnecesarry, maybe remove because of mobile. */
+  background-color: rgba(105,105,105, 0.9);
+  z-index: 1;
+}
+
+.cell:hover .element .at_num{
+  font-size: 5px;
+  opacity: 1;
+  top:0px;
+  right:0px;
+}
+.cell:hover .element .at_details{
+  opacity: 1;
+  font-size: 3px;
+  bottom:0px;
+}
+@media (max-width: 600px) {
+  .cell:hover .element .symbol{
+    top: 45%;
+  }
+}
+/*
+.cell:nth-child(-n+2) .element,
+.cell:nth-child(n+13) .element {
+  background-color: rgba(0, 160, 96, 0.6);
+}
+.cell:nth-child(1) .element,
+.periodic-row:nth-child(2) .cell:nth-child(n+14) .element,
+.periodic-row:nth-child(3) .cell:nth-child(n+15) .element,
+.periodic-row:nth-child(4) .cell:nth-child(n+16) .element,
+.periodic-row:nth-child(5) .cell:nth-child(n+17) .element {
+  background-color: rgba(0, 192, 64, 0.6);
+}
+.periodic-row:nth-child(-n+6) .cell:nth-child(18) .element {
+  background-color: rgba(64, 192, 0, 0.6);
+}
+.periodic-row:nth-child(n+9) .element {
+  background-color: rgba(0, 96, 160, 0.6);
+}
+.cell:nth-child(-n+2):hover .element,
+.cell:nth-child(n+13):hover .element {
+  background-color: rgba(0, 160, 96, 0.9);
+}
+.cell:nth-child(1):hover .element,
+.periodic-row:nth-child(2) .cell:nth-child(n+14):hover .element,
+.periodic-row:nth-child(3) .cell:nth-child(n+15):hover .element,
+.periodic-row:nth-child(4) .cell:nth-child(n+16):hover .element,
+.periodic-row:nth-child(5) .cell:nth-child(n+17):hover .element {
+  background-color: rgba(0, 192, 64, 0.9);
+}
+.periodic-row:nth-child(-n+6) .cell:nth-child(18):hover .element {
+  background-color: rgba(64, 192, 0, 0.9);
+}
+.periodic-row:nth-child(n+9) .cell:hover .element {
+  background-color: rgba(0, 96, 160, 0.9);
+}
+*/
+.cell:nth-child(1) .element {
+  -webkit-transform-origin: 0 50%;
+  -ms-transform-origin: 0 50%;
+  transform-origin: 0 50%;
+}
+.cell:nth-child(18) .element {
+  -webkit-transform-origin: 100% 50%;
+  -ms-transform-origin: 100% 50%;
+  transform-origin: 100% 50%;
+}
+.periodic-row:nth-child(10) .cell .element {
+  -webkit-transform-origin: 50% 100%;
+  -ms-transform-origin: 50% 100%;
+  transform-origin: 50% 100%;
+}
+.periodic-row:nth-child(1) .cell .element {
+  -webkit-transform-origin: 50% 0;
+  -ms-transform-origin: 50% 0;
+  transform-origin: 50% 0;
+}
+.periodic-row:nth-child(1) .cell:nth-child(1) .element {
+  -webkit-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+}
+.periodic-row:nth-child(1) .cell:nth-child(15) .element { /*He is not pos 18, but pos 15 because we removed 3 spaces.*/
+  -webkit-transform-origin: 100% 0;
+  -ms-transform-origin: 100% 0;
+  transform-origin: 100% 0;
+}
+.periodic-row:nth-child(10) .cell:nth-child(18) .element {
+  -webkit-transform-origin: 100% 100%;
+  -ms-transform-origin: 100% 100%;
+  transform-origin: 100% 100%;
+}
+/* // If you change this from 10%, you need to change all others to make total height 100% 
+.periodic-row:nth-child(8){
+  height: 10%; 
+}
+*/
+
+
+.at_details {
+  bottom: 4px;
+  left: 0px;
+  right: 0px;
+  line-height: 1;
+}
+
+.available  {
+	background-color: rgba(255, 0, 0, 0.8);
+	cursor: pointer;
+}
+.cell:hover .available{
+	background-color: rgba(255, 0, 0, 0.9);
+}
+
+.unchecked  {
+    cursor: pointer;
+	background-color: rgba(150, 50, 50, 0.6);
+}
+.cell:hover .unchecked{
+	background-color: rgba(150, 50, 50, 0.9);
+}
+
+
+
+@media (min-width: 600px) {
+  .periodic {
+    height: 400px;
+    margin-right: -2px;
+  }
+  .element {
+    right: 2px;
+    bottom: 2px;
+  }
+  .at_details {
+    font-size: 5px;
+    opacity: 1;
+	bottom: 0px;
+  }
+  .at_num {
+    font-size: 10px;
+	opacity: 1;
+    top: 0px;
+	right: 0px;
+  }
+  .symbol {
+	top: 35%;
+    font-size: 16px;
+  }
+  .cell:hover .element .at_num{
+    font-size: 9px;
+    opacity: 1;
+    top:0px;
+    right:0px;
+  }
+  .cell:hover .element .at_details{
+    font-size: 4px;
+	bottom: 0px;
+  }
+  
+  .cell:hover .element .symbol{
+    top: 35%;
+	font-size: 18px;
+  }
+  .cell2x .element .symbol{
+    font-size: 11px;
+  }
+  .cell2x:hover .element .symbol{
+    font-size: 11px;
+  }
+}
+@media (min-width: 800px) {
+  .periodic {
+    height: 540px;
+  }
+  .symbol {
+    font-size: 24px;
+  }
+  .at_num {
+    font-size: 12px;
+    top: 1px;
+	right: 1px;
+  }
+  .element {
+    right: 2px;
+    bottom: 2px;
+  }
+  .at_details {
+    font-size: 5px;
+    opacity: 1;
+	bottom: 2px;
+  }
+  .cell:hover .element .at_num{
+    font-size: 12px;
+    opacity: 1;
+    top:0px;
+    right:0px;
+  }
+  .cell:hover .element .at_details{
+    opacity: 1;
+    font-size: 6px;
+    bottom:0px;
+  }
+  
+  .cell:hover .element .symbol{
+    top: 35%;
+	font-size: 24px;
+  }
+  .cell:hover .element {
+  }
+  .cell2x .element .symbol{
+    font-size: 15px;
+  }
+  .cell2x:hover .element .symbol{
+    font-size: 15px;
+  }
+}
+@media (min-width: 1010px) {
+  .periodic {
+    width: 1000px;
+	margin: auto;
+  }
+}
+/*
+@media (min-width: 1000px) {
+  .periodic {
+    height: 680px;
+  }
+  .at_details {
+    font-size: 8px;
+  }
+  .at_num {
+    font-size: 14px;
+  }
+  .symbol {
+    font-size: 26px;
+  }
+}
+*/
+/*
+@media (min-width: 1200px) {
+  .periodic {
+    height: 750px;
+  }
+  .at_details {
+    font-size: 10px;
+  }
+  .at_num {
+    font-size: 16px;
+  }
+  .symbol {
+    font-size: 30px;
+  }
+}
+*/

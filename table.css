@@ -1,0 +1,191 @@
+/* Not sure if I want this. This makes the table scroll left-right independently from the rest of the page.
+.tg-wrap{
+  overflow-x: scroll;
+}
+*/
+
+.tg-wrap-shown{
+  display: block;
+}
+
+.tg-wrap-hidden{
+  display: none;
+}
+
+.tg {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.tg td {
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	padding: 5px 2px;
+	border-style: solid;
+	border-width: 1px;
+	overflow: hidden;
+	word-break: normal;
+}
+
+.tg th {
+	font-family: Arial, sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+	padding: 5px 2px;
+	border-style: solid;
+	border-width: 1px;
+	overflow: hidden;
+	word-break: normal;
+}
+
+th.tg-sort-header::-moz-selection {
+	background: transparent;
+}
+
+th.tg-sort-header::selection {
+	background: transparent;
+}
+
+th.tg-sort-header {
+	cursor: pointer;
+}
+
+table th.tg-sort-header:after {
+	content: '';
+	float: right;
+	margin-top: 7px;
+	border-width: 0 4px 4px;
+	border-style: solid;
+	border-color: #404040 transparent;
+	visibility: hidden;
+}
+
+table th.tg-sort-header:hover:after {
+	visibility: visible;
+}
+
+table th.tg-sort-desc:after,
+table th.tg-sort-asc:after,
+table th.tg-sort-asc:hover:after {
+	visibility: visible;
+	opacity: 0.4;
+}
+
+table th.tg-sort-desc:after {
+	border-bottom: none;
+	border-width: 4px 4px 0;
+}
+
+@media screen and (max-width: 600px) {
+/*
+	.tg {
+		width: auto !important;
+	}
+	.tg col {
+		width: auto !important;
+	}*/
+	/*
+	.tg-wrap {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}*/
+}
+
+.tg-tg01 {
+	min-width: 145px;
+	max-width: 145px;
+}
+.tg-tg02 {
+	min-width: 100px;
+	max-width: 100px;
+}
+.tg-tg03 {
+	min-width: 81px;
+	max-width: 81px;
+}
+.tg-tg04 {
+	display: none;
+}
+.tg-tg05 {
+	display: none;
+}
+.tg-tg06 {
+	min-width: 80px;
+	max-width: 80px;
+}
+.tg-tg07 {
+	min-width: 200px;
+	max-width: 200px;
+}
+.tg-tg08 {
+	min-width: 200px;
+	max-width: 200px;
+}
+.tg-tg09 {
+	min-width: 80px;
+	max-width: 80px;
+}
+.tg-tg10 {
+	min-width: 150px;
+	max-width: 150px;
+}
+.tg-tg11 {
+	display: none;
+}
+
+.makescrollable{
+	max-height: 200px;
+	/* overflow-y:scroll; */
+	overflow-y:auto;
+}
+
+@media screen and (min-width: 1124px) { 
+	/* change
+		min-width: 1124px
+	to the width of the table.
+	*/
+	
+	.tg-tg01 {
+		max-width: none;
+	}
+	/*.tg-tg02 {
+		max-width: 100px;
+	}*/
+	.tg-tg03 {
+		max-width: none;
+	}
+	
+	.tg {
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
+
+	/* Todo remove unnecessary dulicates below */
+	.tg td {
+		font-family: Arial, sans-serif;
+		font-size: 14px;
+		padding: 10px 5px;
+		border-style: solid;
+		border-width: 1px;
+		overflow: hidden;
+		word-break: normal;
+	}
+
+	.tg th {
+		font-family: Arial, sans-serif;
+		font-size: 14px;
+		font-weight: normal;
+		padding: 10px 5px;
+		border-style: solid;
+		border-width: 1px;
+		overflow: hidden;
+		word-break: normal;
+	}
+	/*
+	.tg-tg04 {
+		display: table-cell;
+	}
+	.tg-tg05 {
+		display: table-cell;
+	}*/
+}

@@ -1,0 +1,317 @@
+<script>
+function hideshowPeriodic(input){
+  periodicelement = document.getElementById("PeriodicID");
+  //console.log(periodicelement);
+  if (periodicelement.className == "periodic periodicshown") {
+    periodicelement.className = "periodic periodichidden";
+  }
+  else {
+    periodicelement.className = "periodic periodicshown";
+	
+  }
+}
+
+function hideshowTable(input){
+  periodicelement = document.getElementById("tg-wrap-id");
+  //console.log(periodicelement);
+  if (periodicelement.className == "tg-wrap tg-wrap-shown") {
+    periodicelement.className = "tg-wrap tg-wrap-hidden";
+  }
+  else {
+    periodicelement.className = "tg-wrap tg-wrap-shown";
+	
+  }
+}
+
+
+function elegible(td, input){
+	/* Check if the current table row is compliant with the selected atom filters. */
+	if (td.innerHTML.toUpperCase() == '') return true;
+	if (td.innerHTML.toUpperCase() == 'UNKNOWN') {
+		for (i = 0; i < input.length; i++){
+			if (input[i].value == 'unknown' && input[i].checked) return true;
+		}
+		return false;
+	}
+	if (td.innerHTML.toUpperCase() == 'THEORY') {
+		for (i = 0; i < input.length; i++){
+			if (input[i].value == 'theory' && input[i].checked) return true;
+		}
+		return false;
+	}
+	for (i = 0; i < input.length; i++){
+		if (!input[i].checked){
+		}
+		else {
+			if (input[i].value == 'H'){
+				hloc = td.innerHTML.toUpperCase().indexOf(input[i].value.toUpperCase());
+				heloc = td.innerHTML.toUpperCase().indexOf('HE');
+				holoc = td.innerHTML.toUpperCase().indexOf('HO');
+				thloc = td.innerHTML.toUpperCase().indexOf('TH');
+				if (hloc > -1 && heloc != hloc && holoc != hloc && thloc+1 != hloc){
+					//console.log(hloc, heloc, thloc);
+					/* TODO this is not foolproof. Example He, H will return false. But so far there are no Hydrogens.
+					TMP fix: H must be the first in the sequence.
+					*/
+					return true;
+				}
+				continue;
+			}
+			if (td.innerHTML.toUpperCase().indexOf(input[i].value.toUpperCase()) > -1){
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+function elegibleExpTheory(td, input){
+	/* Check if the current table row is compliant with the selected exp/theory filters. */
+	for (i = 0; i < input.length; i++){
+	    //console.log(input[i].checked, td.innerHTML,  input[i].value);
+		if (input[i].checked && td.innerHTML == input[i].value){ return true; }
+	}
+	return false;
+}
+
+function filterAtoms() {
+  console.log("Filtering atoms");
+  var inputAtom, inputExp, filter, table, tr, td, i;
+  inputAtom = document.getElementsByName('incheckbox');
+  inputExp = document.getElementsByName('exptheorycheckbox');
+  table = document.getElementById("tg-tg00");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+	
+    tdAtom = tr[i].getElementsByTagName("td")[6]; // change to correct index if changing order of columns.
+	tdExp = tr[i].getElementsByTagName("td")[5]; // change to correct index if changing order of columns.
+    if (tdAtom) { /* this was if (td) but not sure if necessary to check if both. This if is to treat th(table header) differently. */
+	  index = tr[i].getElementsByTagName("td")[10].innerHTML;
+      if (elegible(tdAtom, inputAtom) && elegibleExpTheory(tdExp, inputExp)) {
+        tr[i].style.display = "";
+		if (!mymap.hasLayer(markers[index])){
+			markers[index].addTo(mymap);
+			//oms.addMarker(markers[i]);
+		}
+      } else {
+        tr[i].style.display = "none";
+		if (mymap.hasLayer(markers[index])){
+			markers[index].remove();
+			//oms.remove(markers[i]);
+		}
+      }
+    } 
+  }
+  
+    /* Update map layer select checkboxes. */
+	for (i = 0; i < inputExp.length; i++){
+		if (inputExp[i].value == "Exp"){
+			if (inputExp[i].checked) layer_exp.addTo(mymap);
+			else layer_exp.remove();
+		}
+		if (inputExp[i].value == "Theory"){
+			if (inputExp[i].checked) layer_theor.addTo(mymap);
+			else layer_theor.remove();
+		}
+		if (inputExp[i].value == "Exp/Theory"){
+			if (inputExp[i].checked) layer_exp_theor.addTo(mymap);
+			else layer_exp_theor.remove();
+		}
+	}
+	
+	/* Update periodic table. */
+	for (i = 0; i < inputAtom.length; i++){
+		if(document.getElementById("periodic" + inputAtom[i].value)){
+			if (inputAtom[i].checked) document.getElementById("periodic" + inputAtom[i].value).className = "element available";
+			else document.getElementById("periodic" + inputAtom[i].value).className = "element unchecked";
+		}
+	}
+}
+
+</script>
+<script>
+function handleClick(cb) {
+  //console.log("Clicked, new value = " + cb.checked, cb.name, cb.value);
+  if (cb.id == "checkallKnown"){
+	inputAtom = document.getElementsByName('incheckbox');
+	for (i = 0; i < inputAtom.length; i++){ if (inputAtom[i].value != 'unknown' && inputAtom[i].value != 'theory') inputAtom[i].checked = true; }
+  }
+  if (cb.id == "checkselectAll"){
+	inputAtom = document.getElementsByName('incheckbox');
+	for (i = 0; i < inputAtom.length; i++){ inputAtom[i].checked = true; }
+  }
+  if (cb.id == "checkselectNone"){
+	inputAtom = document.getElementsByName('incheckbox');
+	for (i = 0; i < inputAtom.length; i++){ inputAtom[i].checked = false; }
+  }
+    
+  filterAtoms();
+}
+
+function periodicClick(loc){
+	object = loc.getElementsByTagName('div')[0];
+	element = object.id.substring(8);
+	if (object.className.indexOf('available') > -1) {document.getElementById("check" + element).checked = false;}
+	else { document.getElementById("check" + element).checked = true;}
+	filterAtoms();
+}
+
+
+</script>
+
+<script type="text/javascript" charset="utf-8">
+/* Sort */
+var TgTableSort=window.TgTableSort||function(n, t) {
+    "use strict";
+    function r(n, t) {
+        for(var e=[], o=n.childNodes, i=0;
+        i<o.length;
+        ++i) {
+            var u=o[i];
+            if("."==t.substring(0, 1)) {
+                var a=t.substring(1);
+                f(u, a)&&e.push(u)
+            }
+            else u.nodeName.toLowerCase()==t&&e.push(u);
+            var c=r(u, t);
+            e=e.concat(c)
+        }
+        return e
+    }
+    function e(n, t) {
+        var e=[],
+        o=r(n, "tr");
+        return o.forEach(function(n) {
+            var o=r(n, "td");
+            t>=0&&t<o.length&&e.push(o[t])
+        }
+        ),
+        e
+    }
+    function o(n) {
+        return n.textContent||n.innerText||""
+    }
+    function i(n) {
+        return n.innerHTML||""
+    }
+    function u(n, t) {
+        var r=e(n, t);
+        return r.map(o)
+    }
+    function a(n, t) {
+        var r=e(n, t);
+        return r.map(i)
+    }
+    function c(n) {
+        var t=n.className||"";
+        return t.match(/\S+/g)||[]
+    }
+    function f(n, t) {
+        return-1!=c(n).indexOf(t)
+    }
+    function s(n, t) {
+        f(n, t)||(n.className+=" "+t)
+    }
+    function d(n, t) {
+        if(f(n, t)) {
+            var r=c(n),
+            e=r.indexOf(t);
+            r.splice(e, 1),
+            n.className=r.join(" ")
+        }
+    }
+    function v(n) {
+        d(n, L),
+        d(n, E)
+    }
+    function l(n, t, e) {
+        r(n, "."+E).map(v),
+        r(n, "."+L).map(v),
+        e==T?s(t, E): s(t, L)
+    }
+    function g(n) {
+        return function(t, r) {
+            var e=n*t.str.localeCompare(r.str);
+            return 0==e&&(e=t.index-r.index),
+            e
+        }
+    }
+    function h(n) {
+        return function(t, r) {
+            var e=+t.str,
+            o=+r.str;
+            return e==o?t.index-r.index: n*(e-o)
+        }
+    }
+    function m(n, t, r) {
+        var e=u(n, t),
+        o=e.map(function(n, t) {
+            return {
+                str: n, index: t
+            }
+        }
+        ),
+        i=e&&-1==e.map(isNaN).indexOf(!0),
+        a=i?h(r):g(r);
+        return o.sort(a),
+        o.map(function(n) {
+            return n.index
+        }
+        )
+    }
+    function p(n, t, r, o) {
+        for(var i=f(o, E)?N: T, u=m(n, r, i), c=0;
+        t>c;
+        ++c) {
+            var s=e(n, c),
+            d=a(n, c);
+            s.forEach(function(n, t) {
+                n.innerHTML=d[u[t]]
+            }
+            )
+        }
+        l(n, o, i)
+    }
+    function x(n, t) {
+        var r=t.length;
+        t.forEach(function(t, e) {
+            t.addEventListener("click", function() {
+                p(n, r, e, t);
+				filterAtoms(); /* This is what is actually called on click. So after sort we re-do the filter. */
+            }
+            ), s(t, "tg-sort-header");
+        }
+        )
+    }
+    var T=1,
+    N=-1,
+    E="tg-sort-asc",
+    L="tg-sort-desc";
+    return function(t) {
+        var e=n.getElementById(t),
+        o=r(e, "tr"),
+        i=o.length>0?r(o[0], "td"): [];
+        0==i.length&&(i=r(o[0], "th"));
+        for(var u=1;
+        u<o.length;
+        ++u) {
+            var a=r(o[u], "td");
+            if(a.length!=i.length)return
+        }
+        x(e, i)
+    }
+}
+
+(document);
+document.addEventListener("DOMContentLoaded", function(n) {
+    TgTableSort("tg-tg00");
+}
+
+);
+</script>
+
+<div id='hideShowTableDiv'>
+<input type='button' onclick='hideshowTable(this);' name="shtable" value="Hide/Show table" id="hideShowTable">
+</div>

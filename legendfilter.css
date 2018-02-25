@@ -1,0 +1,250 @@
+h1 {
+  font-size: 24px;
+}
+
+@media (min-width: 400px) {
+  h1 {
+    font-size: 32px;
+  }
+}
+
+h2 {
+  font-size: 20px;
+}
+
+@media (min-width: 400px) {
+  h2 {
+    font-size: 28px;
+  }
+}
+
+
+#ExpTheoryCheckboxes{
+  display: table;
+  position: relative;
+  width: 100%;
+}
+
+.filterExpTheorycheckbox {
+  color: rgb(255, 255, 255);
+  width: 33.33%;
+  display: table-cell;
+  /* Why doesn't notepad++ color the next two? */
+  /* align-items: center;
+  justify-content: center; */
+  vertical-align: middle;
+  text-align: center;
+  font-size:12px;
+  height:28px;
+ 
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  /* makes border on the inside, not outside */
+  border-width: 1px;
+  border-style: solid;
+  border-color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+#AtomCheckboxes{
+  display: block;
+  position: relative;
+  width: 100%;
+}
+#AtomCheckboxes label{
+  background-color: rgba(150, 50, 50, 0.6);
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.filtercheckbox {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+	/* makes border on the inside, not outside */
+  color: rgb(255, 255, 255);
+  width: 5.55%;
+  min-width: 24px; /* 2em; */
+  display: inline-flex;
+  /* Why doesn't notepad++ color the next two? */
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  font-size:12px;
+  height:28px;
+  
+  border-width: 1px;
+  border-style: solid;
+  border-color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.filtercheckboxU, .filtercheckboxT {
+  width: 17.64%;
+  width: 50%;
+  min-width: 120px; /* 10em; didn't work on iPad/iPhone */
+}
+
+ #AtomButtons input[type=button]{
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  /* makes border on the inside, not outside */
+  border-width: 1px;
+  border-style: solid;
+  border-color: white;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  /* font-size: 16px; */ 
+  cursor: pointer;
+  /*display: table-cell;*/
+  vertical-align: middle;
+  text-align: center;
+  font-size:12px;
+  height:28px;
+  width: 33.33%;
+  padding: 0px;
+  font-weight: bold;
+}
+
+#checkExp+label{
+  background-color: rgb(150,105,105);
+}
+
+#checkTheory+label{
+  background-color: rgb(105,105,150);
+}
+
+#checkExpTheory+label{
+  background-color: rgb(150,105,150);
+}
+
+#checkExp:checked+label{
+  background-color: rgb(150,0,0); /* The same as on the map */
+}
+
+#checkTheory:checked+label{
+  background-color: rgb(0,0,150); /* The same as on the map */
+}
+
+#checkExpTheory:checked+label{
+  background-color: rgb(100,0,100); /* The same as on the map */
+}
+
+#AtomCheckboxes input:checked+label{
+  background-color: rgba(255, 0, 0, 0.8);
+}
+
+#AtomCheckboxes input[type=checkbox], #ExpTheoryCheckboxes input[type=checkbox] {
+  display: none;
+}
+
+input[type=checkbox]:checked+.filtercheckbox{ /* Label after the checked checkbox.*/
+  font-weight: bold;
+}
+
+input[type=checkbox]:checked+.filterExpTheorycheckbox{ /* Label after the checked checkbox.*/
+  font-weight: bold;
+}
+
+#hideShowPeriodic, #hideShowTable{
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  /* makes border on the inside, not outside */
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+  border-radius: 5px;
+  background-color: rgb(220, 220, 220);
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  /* font-size: 16px; */
+  cursor: pointer;
+  /*display: table-cell;*/
+  vertical-align: middle;
+  text-align: center;
+  font-size:12px;
+  height:28px;
+  width: 33.33%;
+  min-width: 160px;
+  padding: 0px;
+  font-weight: bold;
+}
+
+
+@media (min-width: 380px) {
+  .filtercheckbox, .filterExpTheorycheckbox{
+    font-size:16px;
+  }
+  .filtercheckboxU, .filtercheckboxT {
+    min-width: 150px;
+  }
+  
+}
+
+@media (min-width: 700px) {
+  .filtercheckbox, .filterExpTheorycheckbox, #AtomButtons input[type=button]{
+    font-size:18px;
+  }
+  
+  #hideShowPeriodic, #hideShowTable {
+    font-size:16px;
+  }
+}
+
+@media (max-width: 424px) {
+  .filtercheckboxU, .filtercheckboxT {
+    width: 30%;
+  }
+}
+
+/*
+input[type=checkbox] {
+    padding-left:5px;
+    padding-right:5px;
+    border-radius:15px;
+
+    -webkit-appearance:button;
+
+    border: double 2px #00F;
+
+    background-color:#0b0095;
+    color:#FFF;
+    white-space: nowrap;
+    overflow:hidden;
+
+    width:15px;
+    height:15px;
+}
+
+input[type=checkbox]:checked {
+    background-color:#000;
+    border-left-color:#06F;
+    border-right-color:#06F;
+}
+
+input[type=checkbox]:hover {
+    box-shadow:0px 0px 10px #1300ff;
+}*/
