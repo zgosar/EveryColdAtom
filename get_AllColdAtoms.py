@@ -208,9 +208,9 @@ class GroupClass:
         ret['desc'] = '<a href="{webpage}"><b>{name}</b></a><br />{institution}, {country}<br />'.format(
             i, name=self.name.replace('\'', '\\\''), webpage=self.webpage.replace('\'', '\\\''),
             institution=self.institution.replace('\'', '\\\''), country=self.country)
-        ret['desc'] += '<b>Research:</b> {:}<br />{:}<br />'.format(self.exp_theor, self.fields)
+        ret['desc'] += '<b>Research:</b> {:}<br />{:}<br />'.format(self.exp_theor, self.fields.replace(',,', ';'))
         ret['desc'] += '<b>Atoms:</b> {:}<br />'.format(self.atom)
-        ret['desc'] += '<b>Permanent researchers and staff:</b> {:}<br />'.format(self.people)
+        ret['desc'] += '<b>Permanent researchers and staff:</b> {:}<br />'.format(self.people.replace(',,', ';'))
         ret['desc'] += '<b>Editors note:</b> {:}<br />'.format(self.comment)
         ret['atom'] = self.atom
         ret['exp_theor'] = self.exp_theor
@@ -219,7 +219,7 @@ class GroupClass:
 
     def html_header_line(self):
         """ Exports the header line in the html table on the webpage. """
-        ret = """<div class="tg-wrap"><table id="tg-tg00" class="tg">
+        ret = """<div class="tg-wrap tg-wrap-shown" id="tg-wrap-id"><table id="tg-tg00" class="tg">
 <tr>
     <th class="tg-tg01">Group</th>
     <th class="tg-tg02">Institution</th>
@@ -266,9 +266,9 @@ class GroupClass:
            lat=self.lat,
            long=self.long,
            exp_theor=self.exp_theor,
-           desc=self.fields,
+           desc=self.fields.replace(',,', ';'),
            atoms=self.atom,
-           people=self.people,
+           people=self.people.replace(',,', ';'),
            comment=self.comment,
            index=index)
         return ret

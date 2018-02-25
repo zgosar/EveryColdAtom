@@ -1,3 +1,24 @@
+h1 {
+  font-size: 24px;
+}
+
+@media (min-width: 400px) {
+  h1 {
+    font-size: 32px;
+  }
+}
+
+h2 {
+  font-size: 20px;
+}
+
+@media (min-width: 400px) {
+  h2 {
+    font-size: 28px;
+  }
+}
+
+
 #ExpTheoryCheckboxes{
   display: table;
   position: relative;
@@ -105,24 +126,6 @@
   font-weight: bold;
 }
 
-@media (min-width: 380px) {
-  .filtercheckbox .filterExpTheorycheckbox{
-    font-size:16px;
-  }
-}
-
-@media (min-width: 700px) {
-  .filtercheckbox, .filterExpTheorycheckbox, #AtomButtons input[type=button] {
-    font-size:18px;
-  }
-}
-
-@media (max-width: 424px) {
-  .filtercheckboxU, .filtercheckboxT {
-    width: 30%;
-  }
-}
-
 #checkExp+label{
   background-color: rgb(150,105,105);
 }
@@ -170,10 +173,10 @@ input[type=checkbox]:checked+.filterExpTheorycheckbox{ /* Label after the checke
   /* makes border on the inside, not outside */
   border-width: 1px;
   border-style: solid;
-  border-color: white;
+  border-color: black;
   border-radius: 5px;
-  background-color: rgb(200, 200, 200);
-  color: white;
+  background-color: rgb(220, 220, 220);
+  color: black;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -185,10 +188,37 @@ input[type=checkbox]:checked+.filterExpTheorycheckbox{ /* Label after the checke
   font-size:12px;
   height:28px;
   width: 33.33%;
+  min-width: 160px;
   padding: 0px;
   font-weight: bold;
 }
 
+
+@media (min-width: 380px) {
+  .filtercheckbox, .filterExpTheorycheckbox{
+    font-size:16px;
+  }
+  .filtercheckboxU, .filtercheckboxT {
+    min-width: 150px;
+  }
+  
+}
+
+@media (min-width: 700px) {
+  .filtercheckbox, .filterExpTheorycheckbox, #AtomButtons input[type=button]{
+    font-size:18px;
+  }
+  
+  #hideShowPeriodic, #hideShowTable {
+    font-size:16px;
+  }
+}
+
+@media (max-width: 424px) {
+  .filtercheckboxU, .filtercheckboxT {
+    width: 30%;
+  }
+}
 
 /*
 input[type=checkbox] {

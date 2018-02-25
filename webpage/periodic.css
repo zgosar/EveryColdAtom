@@ -48,7 +48,8 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.05);
   text-align: center;
   cursor: pointer;
-  /* pointer-events: none; */
+  pointer-events: none; /* If this is not-commented: When an element is hover-ed, the surrounding elements are coverd with the current.
+  When you move mouse over a neighbouring element, that-one expands. If this is commented, the neighbouring element doesn't expand. */
   -webkit-backface-visibility: hidden;
   -webkit-transition: all 200ms ease;
   transition: all 200ms ease;
@@ -81,13 +82,13 @@ body {
 }
 
 .cell:hover .element {
-  z-index: 1;
   border-color: rgba(0, 0, 0, 0.1);
   -webkit-transform: scale(3, 3);
   -ms-transform: scale(3, 3);
   transform: scale(3, 3); 
   /* Increases size by factor of 3. Unnecesarry, maybe remove because of mobile. */
   background-color: rgba(105,105,105, 0.9);
+  z-index: 1;
 }
 
 .cell:hover .element .at_num{
