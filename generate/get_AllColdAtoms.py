@@ -342,7 +342,7 @@ if 0: # convert to json like format
     print("Generating json.")
     with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
               'r', encoding="utf8") as in_file:
-        with open('webpage/json_data.js', 'w', encoding="utf8") as out_file:
+        with open('../json_data.js', 'w', encoding="utf8") as out_file:
             out_file.write('var data =')
             in_file.readline()
             tmp_list = []
@@ -359,7 +359,7 @@ if 0: # convert to html table.
     print('Generating html table')
     with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
               'r', encoding="utf8") as in_file:
-        with open('webpage/generated_table_part.html', 'w', encoding="utf8") as out_file:
+        with open('../generated_table_part.html', 'w', encoding="utf8") as out_file:
             in_file.readline()
             tmp_list = ""
             a = GroupClass()
@@ -375,7 +375,7 @@ if 0: # convert to html table.
                         
 if 1: #combine htmls
     print('Combining htmls')
-    with open('webpage/index.html', 'w', encoding="utf8") as out_file:
+    with open('../index.html', 'w', encoding="utf8") as out_file:
         inlist = ['head_part.html', 'header_part.html',
                   'atoms_part.html',
                   'legendfilter.html', 
@@ -383,7 +383,7 @@ if 1: #combine htmls
                   'table_before_part.html', 'generated_table_part.html',
                   'footer_part.html']
         for infile in inlist:
-            with open('webpage/' + infile, 'r', encoding="utf8") as in_file:
+            with open('../' + infile, 'r', encoding="utf8") as in_file:
                 out_file.write(in_file.read())
     print('Combined htmls')      
             
