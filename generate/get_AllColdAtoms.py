@@ -104,6 +104,62 @@ class GroupClass:
         
         return thediv
 
+    def get_from_utoronto_new(self, url, replace_existing=True):
+        """
+        Works newer URL, such as view-source:https://ucan.physics.utoronto.ca/research-groups/jegliczupanic/
+        """
+        r = requests.get(url)
+        soup = BeautifulSoup(r.text, 'html.parser')
+        thediv = soup.find_all("article")[0]
+        
+        self.name = ' '.join(thediv.find_all('h1')[0].text.split())
+    
+        institution = thediv.section.div.div.text.strip(
+            ).replace(';', ' ').split("Institution")[1].split('-')[0]
+        institution = " ".join(institution.split())
+
+        country = thediv.find_all("span", {"class": "has-tip"})
+        if len(country) == 0:
+            self.country = GroupClass.defaults['country']
+        else:
+            self.country = country[0]['title'].strip()
+
+        #exp_theor = thediv.find_all("span", {"class": "research note"})
+        #self.exp_theor = thediv.text.split("Research")[-1].split()[0]
+        self.exp_theor = thediv.find_all("div", {"class": "callout"})[0].find_all(
+            "div")[2].text.split("Research")[1].split()[0].strip()
+        # Todo convert to old format Exp, Exp/Theory, Theory, insted of Experimen, Experiment/Theory, Theory
+        
+        fields = thediv.find_all("div", {"class": "description"})
+
+        if len(fields) == 0:
+            self.fields = GroupClass.defaults['fields']
+        else:
+            self.fields = fields[0].text.strip().replace(';', ',,').replace('\n', '        ')
+            # Replacements are maybe not necessary, but needed for backwards compatibility.
+
+
+        people = thediv.text.split("Permanent Researchers and Staff")
+        if len(people) == 1:
+            self.people = GroupClass.defaults['people']
+        else:
+            self.people = people[1].strip().replace(';', ',,').replace('\n', '        ')
+            # Replacements are maybe not necessary, but needed for backwards compatibility.
+
+        self.webpage = thediv.find_all("div", {"class": "callout"})[0].find_all(
+            "div")[1].a['href']
+        # Maybe I should be using find instead of find_all the whole time! Too late now.
+
+        self.atom = ''
+
+        if 1:
+            print(self.name, self.institution, self.country, self.exp_theor, sep='\t|\t')
+            print('\t', self.fields, self.people, sep='\t|\t')
+            print(self.webpage)
+            print()
+        
+        return thediv
+
     def csv(self): # Should probably use built-in csv writer.
         """ Export csv line """
         all_vars = [self.name, self.webpage, self.institution,
@@ -273,7 +329,8 @@ class GroupClass:
            index=index)
         return ret
            
-        
+def diff(file1, file2):
+    pass
 
 ######################################################################
 """
@@ -283,7 +340,8 @@ add to production. Hopefully.
 """
 ######################################################################
 
-if 0: # load all from ucan      
+if 0: # load all from ucan
+    # obsolete because of the webpage change.
     base_url = 'https://ucan.physics.utoronto.ca/Groups'
     r = requests.get(base_url)
     soup = BeautifulSoup(r.text, 'html.parser')
@@ -295,7 +353,7 @@ if 0: # load all from ucan
     a = GroupClass()
 
     count = 0
-    with open('ucan_utoronto_database_test20180221.csv', 'w', encoding="utf-8") as f:
+    with open('ucan_utoronto_database_test20180330.csv', 'w', encoding="utf-8") as f:
         # you must open the file in notepad++ and "Convert to UTF-8" so that special characters really work.
         f.write(a.csv_header())
         for row in thetable.children:
@@ -308,6 +366,35 @@ if 0: # load all from ucan
 
     url = 'https://ucan.physics.utoronto.ca/Groups/group.2005-07-11.4942545460/view'
     #b = a.get_from_utoronto(url)
+
+if 1: # load all from ucan
+    base_url = 'https://ucan.physics.utoronto.ca/research-groups/'
+    base_url1 = 'https://ucan.physics.utoronto.ca'
+    r = requests.get(base_url)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    thetable = soup.find_all("table", {"id": "research_groups_table"})
+    if len(thetable) != 1:
+        print('The len of the table != 1', len(thetable))
+    thetable = thetable[0].tbody
+
+    a = GroupClass()
+
+    count = 0
+    with open('ucan_utoronto_database_test20180330.csv', 'w', encoding="utf-8") as f:
+        # you must open the file in notepad++ and "Convert to UTF-8" so that special characters really work.
+        f.write(a.csv_header())
+        for row in thetable.children:
+            if (str(row).strip() == ''): continue
+            print(count, row.td.a['href'])
+            count += 1
+            a = GroupClass() # pretty sure this needs to be reinitialized.
+            b = a.get_from_utoronto_new(base_url1 + row.td.a['href'])
+            f.write(a.csv())
+
+    url = 'https://ucan.physics.utoronto.ca/Groups/group.2005-07-11.4942545460/view'
+    #b = a.get_from_utoronto(url)
+
+
 
 if 0: #geocode
     import googlemaps
@@ -373,7 +460,7 @@ if 0: # convert to html table.
             #json.dump(tmp_list, out_file, ensure_ascii=False)
             out_file.write(a.html_ending_line())
                         
-if 1: #combine htmls
+if 0: #combine htmls
     print('Combining htmls')
     with open('../index.html', 'w', encoding="utf8") as out_file:
         inlist = ['head_part.html', 'header_part.html',
