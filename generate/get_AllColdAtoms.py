@@ -328,9 +328,69 @@ class GroupClass:
            comment=self.comment,
            index=index)
         return ret
-           
-def diff(file1, file2):
-    pass
+
+    def compare(self, other, which):
+        for w in which:
+            if w == 'name':
+                if self.name != other.name: return False
+            if w == 'webpage':
+                if self.webpage != other.webpage: return False
+            if w == 'institution':
+                if self.institution != other.institution: return False
+            if w == 'country':
+                if self.country != other.country: return False
+            if w == 'lat':
+                if self.lat != other.lat: return False
+            if w == 'long':
+                if self.long != other.long: return False
+            if w == 'exp_theor':
+                if self.exp_theor != other.exp_theor: return False
+            if w == 'webpage':
+                if self.webpage != other.webpage: return False
+            if w == 'desc':
+                if self.desc != other.desc: return False
+            if w == 'atoms':
+                if self.atoms != other.atoms: return False
+            if w == 'people':
+                if self.people != other.people: return False
+            if w == 'comment':
+                if self.comment != other.comment: return False
+            if w == 'index':
+                if self.index != other.index: return False
+
+        return True
+    
+def diff(filename1, filename2, sep1, sep2):
+    # tab '	'
+    data1 = []
+    data2 = []
+    with open(filename1, 'r', encoding="utf8") as f:
+        f.readline() 
+        for i, line in enumerate(f):
+            a = GroupClass()
+            a.get_from_csv(line, sep=sep1)
+            data1.append(a)
+    with open(filename2, 'r', encoding="utf8") as f:
+        f.readline()
+        for i, line in enumerate(f):
+            a = GroupClass()
+            a.get_from_csv(line, sep=sep2)
+            data2.append(a)
+    print(len(data1), len(data2))
+    for i in range(min(len(data1), len(data2))):
+        if data1[i].compare(data2[i], ['webpage']):
+            pass
+        else:
+            print(data1[i].csv())
+            print(data2[i].csv())
+            print('----------')
+
+if 1:
+    # Calculate diff
+    diff("ucan_utoronto_database_test20180330.csv",
+         'ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
+         ';', '	')
+         
 
 ######################################################################
 """
@@ -367,7 +427,7 @@ if 0: # load all from ucan
     url = 'https://ucan.physics.utoronto.ca/Groups/group.2005-07-11.4942545460/view'
     #b = a.get_from_utoronto(url)
 
-if 1: # load all from ucan
+if 0: # load all from ucan
     base_url = 'https://ucan.physics.utoronto.ca/research-groups/'
     base_url1 = 'https://ucan.physics.utoronto.ca'
     r = requests.get(base_url)
@@ -425,7 +485,7 @@ if 0: # convert to javascript. Obsolete
                 a.get_from_csv(line)
                 out_file.write(a.to_marker(i))
 
-if 0: # convert to json like format
+if 1: # convert to json like format
     print("Generating json.")
     with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
               'r', encoding="utf8") as in_file:
@@ -442,7 +502,7 @@ if 0: # convert to json like format
                 #json.dumps(tmp_list[-1])
             json.dump(tmp_list, out_file, ensure_ascii=False)
 
-if 0: # convert to html table.
+if 1: # convert to html table.
     print('Generating html table')
     with open('ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
               'r', encoding="utf8") as in_file:
@@ -460,7 +520,7 @@ if 0: # convert to html table.
             #json.dump(tmp_list, out_file, ensure_ascii=False)
             out_file.write(a.html_ending_line())
                         
-if 0: #combine htmls
+if 1: #combine htmls
     print('Combining htmls')
     with open('../index.html', 'w', encoding="utf8") as out_file:
         inlist = ['head_part.html', 'header_part.html',
@@ -481,3 +541,9 @@ if 0: # generate checkboxes
     for i in elements:
         print(basestr.format(i, i))
     
+"""
+How to convert excel to csv.
+Ctrl+a, Ctrl+a (the second time is needed to select also the header row).
+Ctrl+c
+Ctrl+v in notepad++.
+"""
