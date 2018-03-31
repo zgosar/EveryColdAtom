@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+from time import sleep
 
 class GroupClass:
     defaults = {}
@@ -113,10 +114,11 @@ class GroupClass:
         thediv = soup.find_all("article")[0]
         
         self.name = ' '.join(thediv.find_all('h1')[0].text.split())
-    
-        institution = thediv.section.div.div.text.strip(
-            ).replace(';', ' ').split("Institution")[1].split('-')[0]
-        institution = " ".join(institution.split())
+
+        institution = "-".join(thediv.section.div.div.text.strip(
+            ).replace(';', ' ').split("Institution")[1].split('-')[:-1])
+        # Splitting by "-" is incorrect. Some names have - in them. Fixed
+        self.institution = " ".join(institution.split())
 
         country = thediv.find_all("span", {"class": "has-tip"})
         if len(country) == 0:
@@ -130,7 +132,7 @@ class GroupClass:
             "div")[2].text.split("Research")[1].split()[0].strip()
         # Todo convert to old format Exp, Exp/Theory, Theory, insted of Experimen, Experiment/Theory, Theory
         
-        fields = thediv.find_all("div", {"class": "description"})
+        fields = thediv.find_all("div", {"class": "rich-text"})
 
         if len(fields) == 0:
             self.fields = GroupClass.defaults['fields']
@@ -345,10 +347,8 @@ class GroupClass:
                 if self.long != other.long: return False
             if w == 'exp_theor':
                 if self.exp_theor != other.exp_theor: return False
-            if w == 'webpage':
-                if self.webpage != other.webpage: return False
             if w == 'desc':
-                if self.desc != other.desc: return False
+                if self.fields != other.fields: return False
             if w == 'atoms':
                 if self.atoms != other.atoms: return False
             if w == 'people':
@@ -360,34 +360,71 @@ class GroupClass:
 
         return True
     
-def diff(filename1, filename2, sep1, sep2):
+def diff(newfile, oldfile, sep1, sep2):
     # tab '	'
     data1 = []
     data2 = []
-    with open(filename1, 'r', encoding="utf8") as f:
+    with open(newfile, 'r', encoding="utf8") as f:
         f.readline() 
         for i, line in enumerate(f):
             a = GroupClass()
             a.get_from_csv(line, sep=sep1)
             data1.append(a)
-    with open(filename2, 'r', encoding="utf8") as f:
+    with open(oldfile, 'r', encoding="utf8") as f:
         f.readline()
         for i, line in enumerate(f):
             a = GroupClass()
             a.get_from_csv(line, sep=sep2)
             data2.append(a)
     print(len(data1), len(data2))
+    groups1 = set([i.name for i in data1])
+    groups2 = set([i.name for i in data2])
+    print("Added groups", sorted(groups1-groups2))
+    print("Removed groups", sorted(groups2-groups1))
     for i in range(min(len(data1), len(data2))):
-        if data1[i].compare(data2[i], ['webpage']):
+        if data1[i].compare(data2[i], [
+            'name',
+            'webpage',
+             'country', # USA is different
+            'institution',
+            'desc', # a lot of desc seem to have diffapeard from webpage.
+            'people', # a lot of people seem to have diffapeard from webpage.
+            #'exp_theor',
+            ]):
             pass
         else:
-            print(data1[i].csv())
-            print(data2[i].csv())
+            print("New", data1[i].csv())
+            print("Old", data2[i].csv())
+            #print("New", data1[i].name, data1[i].country)
+            #print("Old", data2[i].name, data2[i].country)
             print('----------')
+            sleep(1)
+            # Compare all of them to catch new mistakes!!!
+            # TODO Finish comparing.
+
+def geocode_one(name):
+    import googlemaps
+    with open('gmapsAPIkey.txt', 'r') as f:
+        gmapsAPIkey = f.read().strip()
+    gmaps = googlemaps.Client(key=gmapsAPIkey)
+
+    querry = name
+    print('Querry:', querry)
+
+    geocode_result = gmaps.geocode(querry)
+    if len(geocode_result) == 0:
+        print('No results!')
+        return
+    if 1:
+        print(len(geocode_result))
+        print(geocode_result[0]['geometry']['location'])
+    lat = geocode_result[0]['geometry']['location']['lat']
+    long = geocode_result[0]['geometry']['location']['lng']
+    return lat, long
 
 if 1:
     # Calculate diff
-    diff("ucan_utoronto_database_test20180330.csv",
+    diff("ucan_utoronto_database_test20180331-1.csv",
          'ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
          ';', '	')
          
@@ -428,6 +465,10 @@ if 0: # load all from ucan
     #b = a.get_from_utoronto(url)
 
 if 0: # load all from ucan
+    import googlemaps
+    with open('gmapsAPIkey.txt', 'r') as f:
+        gmapsAPIkey = f.read().strip()
+    gmaps = googlemaps.Client(key=gmapsAPIkey)
     base_url = 'https://ucan.physics.utoronto.ca/research-groups/'
     base_url1 = 'https://ucan.physics.utoronto.ca'
     r = requests.get(base_url)
@@ -440,7 +481,7 @@ if 0: # load all from ucan
     a = GroupClass()
 
     count = 0
-    with open('ucan_utoronto_database_test20180330.csv', 'w', encoding="utf-8") as f:
+    with open('ucan_utoronto_database_test20180331-1.csv', 'w', encoding="utf-8") as f:
         # you must open the file in notepad++ and "Convert to UTF-8" so that special characters really work.
         f.write(a.csv_header())
         for row in thetable.children:
@@ -449,10 +490,12 @@ if 0: # load all from ucan
             count += 1
             a = GroupClass() # pretty sure this needs to be reinitialized.
             b = a.get_from_utoronto_new(base_url1 + row.td.a['href'])
+            #a.geocode(gmaps)
             f.write(a.csv())
 
     url = 'https://ucan.physics.utoronto.ca/Groups/group.2005-07-11.4942545460/view'
     #b = a.get_from_utoronto(url)
+
 
 
 
