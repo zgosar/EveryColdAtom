@@ -422,12 +422,7 @@ def geocode_one(name):
     long = geocode_result[0]['geometry']['location']['lng']
     return lat, long
 
-if 0:
-    # Calculate diff
-    diff("ucan_utoronto_database_test20180331-1.csv",
-         'ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
-         ';', '	')
-         
+        
 
 ######################################################################
 """
@@ -439,6 +434,7 @@ add to production. Hopefully.
 
 if 0: # load all from ucan
     # obsolete because of the webpage change.
+    print("Obsolete!!!")
     base_url = 'https://ucan.physics.utoronto.ca/Groups'
     r = requests.get(base_url)
     soup = BeautifulSoup(r.text, 'html.parser')
@@ -465,10 +461,12 @@ if 0: # load all from ucan
     #b = a.get_from_utoronto(url)
 
 if 0: # load all from ucan
-    import googlemaps
-    with open('gmapsAPIkey.txt', 'r') as f:
-        gmapsAPIkey = f.read().strip()
-    gmaps = googlemaps.Client(key=gmapsAPIkey)
+    do_geocode = False
+    if do_geocode:
+        import googlemaps
+        with open('gmapsAPIkey.txt', 'r') as f:
+            gmapsAPIkey = f.read().strip()
+        gmaps = googlemaps.Client(key=gmapsAPIkey)
     base_url = 'https://ucan.physics.utoronto.ca/research-groups/'
     base_url1 = 'https://ucan.physics.utoronto.ca'
     r = requests.get(base_url)
@@ -481,7 +479,7 @@ if 0: # load all from ucan
     a = GroupClass()
 
     count = 0
-    with open('ucan_utoronto_database_test20180331-1.csv', 'w', encoding="utf-8") as f:
+    with open('ucan_utoronto_database_test20180418.csv', 'w', encoding="utf-8") as f:
         # you must open the file in notepad++ and "Convert to UTF-8" so that special characters really work.
         f.write(a.csv_header())
         for row in thetable.children:
@@ -490,13 +488,16 @@ if 0: # load all from ucan
             count += 1
             a = GroupClass() # pretty sure this needs to be reinitialized.
             b = a.get_from_utoronto_new(base_url1 + row.td.a['href'])
-            #a.geocode(gmaps)
+            if do_geocode:
+                a.geocode(gmaps)
             f.write(a.csv())
 
-    url = 'https://ucan.physics.utoronto.ca/Groups/group.2005-07-11.4942545460/view'
-    #b = a.get_from_utoronto(url)
-
-
+if 1:
+    # Calculate diff
+    print("Calculating diff")
+    diff("ucan_utoronto_database_test20180418.csv",
+         'ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
+         ';', '	')
 
 
 if 0: #geocode
