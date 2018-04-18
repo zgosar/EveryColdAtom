@@ -422,7 +422,7 @@ def geocode_one(name):
     long = geocode_result[0]['geometry']['location']['lng']
     return lat, long
 
-if 1:
+if 0:
     # Calculate diff
     diff("ucan_utoronto_database_test20180331-1.csv",
          'ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
