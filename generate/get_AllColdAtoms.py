@@ -479,7 +479,7 @@ if 0: # load all from ucan
     a = GroupClass()
 
     count = 0
-    with open('ucan_utoronto_database_test20180506.csv', 'w', encoding="utf-8") as f:
+    with open('ucan_utoronto_database_test20180528.csv', 'w', encoding="utf-8") as f:
         # you must open the file in notepad++ and "Convert to UTF-8" so that special characters really work.
         f.write(a.csv_header())
         for row in thetable.children:
@@ -492,10 +492,10 @@ if 0: # load all from ucan
                 a.geocode(gmaps)
             f.write(a.csv())
 
-if 0:
+if 1:
     # Calculate diff
     print("Calculating diff")
-    diff("ucan_utoronto_database_test20180506.csv",
+    diff("ucan_utoronto_database_test20180528.csv",
          'ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
          ';', '	')
 
@@ -586,6 +586,10 @@ if 0: # generate checkboxes
         print(basestr.format(i, i))
     
 """
+How to convert csv to excel.
+Open csv in Notepad++.
+Convert to UTF-8
+
 How to convert excel to csv.
 Ctrl+a, Ctrl+a (the second time is needed to select also the header row).
 Ctrl+c
