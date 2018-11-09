@@ -479,7 +479,7 @@ if 0: # load all from ucan
     a = GroupClass()
 
     count = 0
-    with open('ucan_utoronto_database_test20180528.csv', 'w', encoding="utf-8") as f:
+    with open('ucan_utoronto_database_test20181109.csv', 'w', encoding="utf-8") as f:
         # you must open the file in notepad++ and "Convert to UTF-8" so that special characters really work.
         f.write(a.csv_header())
         for row in thetable.children:
@@ -495,7 +495,7 @@ if 0: # load all from ucan
 if 1:
     # Calculate diff
     print("Calculating diff")
-    diff("ucan_utoronto_database_test20180528.csv",
+    diff("ucan_utoronto_database_test20181109.csv",
          'ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
          ';', '	')
 
