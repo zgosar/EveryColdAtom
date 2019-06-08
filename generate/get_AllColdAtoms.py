@@ -460,7 +460,9 @@ if 0: # load all from ucan
     url = 'https://ucan.physics.utoronto.ca/Groups/group.2005-07-11.4942545460/view'
     #b = a.get_from_utoronto(url)
 
-if 0: # load all from ucan
+new_filename = 'ucan_utoronto_database_test20190608.csv'
+# update this filename to the last version of the file
+if 0: # load all from ucan. RUN THIS FIRST
     do_geocode = False
     if do_geocode:
         import googlemaps
@@ -479,8 +481,9 @@ if 0: # load all from ucan
     a = GroupClass()
 
     count = 0
-    with open('ucan_utoronto_database_test20181109.csv', 'w', encoding="utf-8") as f:
+    with open(new_filename, 'w', encoding="utf-8") as f:
         # you must open the file in notepad++ and "Convert to UTF-8" so that special characters really work.
+        # Clarify next time!
         f.write(a.csv_header())
         for row in thetable.children:
             if (str(row).strip() == ''): continue
@@ -495,9 +498,14 @@ if 0: # load all from ucan
 if 1:
     # Calculate diff
     print("Calculating diff")
-    diff("ucan_utoronto_database_test20181109.csv",
+    diff(new_filename,
          'ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
          ';', '	')
+    # To update the production file, open both
+    # ucan_utoronto_database_production_with_geocode-edited2tabs.xlsx
+    # and new_filename in excel. Then copy paste ucan_utoronto_database_production_with_geocode-edited2tabs.xlsx
+    # to ucan_utoronto_database_production_with_geocode-edited2tabs.csv
+    
 
 
 if 0: #geocode
