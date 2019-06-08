@@ -381,6 +381,10 @@ def diff(newfile, oldfile, sep1, sep2):
     groups2 = set([i.name for i in data2])
     print("Added groups", sorted(groups1-groups2))
     print("Removed groups", sorted(groups2-groups1))
+    for i in range(len(data2)):
+        if data2[i].name == 'Khatami Group':
+            data2.pop(i)
+            break
     for i in range(min(len(data1), len(data2))):
         if data1[i].compare(data2[i], [
             'name',
