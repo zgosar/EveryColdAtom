@@ -381,10 +381,7 @@ def diff(newfile, oldfile, sep1, sep2):
     groups2 = set([i.name for i in data2])
     print("Added groups", sorted(groups1-groups2))
     print("Removed groups", sorted(groups2-groups1))
-    for i in range(len(data2)):
-        if data2[i].name == 'Khatami Group':
-            data2.pop(i)
-            break
+
     for i in range(min(len(data1), len(data2))):
         if data1[i].compare(data2[i], [
             'name',
@@ -402,9 +399,10 @@ def diff(newfile, oldfile, sep1, sep2):
             #print("New", data1[i].name, data1[i].country)
             #print("Old", data2[i].name, data2[i].country)
             print('----------')
-            sleep(1)
+            #sleep(1)
             # Compare all of them to catch new mistakes!!!
             # TODO Finish comparing.
+    return data1, data2
 
 def geocode_one(name):
     import googlemaps
@@ -436,7 +434,7 @@ add to production. Hopefully.
 """
 ######################################################################
 
-if 0: # load all from ucan
+if 0: # OBSOLETE load all from ucan OBSOLETE
     # obsolete because of the webpage change.
     print("Obsolete!!!")
     base_url = 'https://ucan.physics.utoronto.ca/Groups'
@@ -464,7 +462,8 @@ if 0: # load all from ucan
     url = 'https://ucan.physics.utoronto.ca/Groups/group.2005-07-11.4942545460/view'
     #b = a.get_from_utoronto(url)
 
-new_filename = 'ucan_utoronto_database_test20190608.csv'
+new_filename = 'ucan_utoronto_database_test20190701.csv'
+print("New filename", new_filename)
 # update this filename to the last version of the file
 if 0: # load all from ucan. RUN THIS FIRST
     do_geocode = False
@@ -502,12 +501,13 @@ if 0: # load all from ucan. RUN THIS FIRST
 if 1:
     # Calculate diff
     print("Calculating diff")
-    diff(new_filename,
+    data1, data2 = diff(new_filename,
          'ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
          ';', '	')
     # To update the production file, open both
     # ucan_utoronto_database_production_with_geocode-edited2tabs.xlsx
-    # and new_filename in excel. Then copy paste ucan_utoronto_database_production_with_geocode-edited2tabs.xlsx
+    # and new_filename in excel, edit the differences in edited2tabs.xlsx.
+    # Then copy paste ucan_utoronto_database_production_with_geocode-edited2tabs.xlsx
     # to ucan_utoronto_database_production_with_geocode-edited2tabs.csv
     
 
