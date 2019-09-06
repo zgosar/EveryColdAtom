@@ -82,8 +82,8 @@ p {
     -webkit-box-sizing: border-box;
 	/* makes border on the inside, not outside */
   color: rgb(255, 255, 255);
-  width: 5.55%;
-  min-width: 24px; /* 2em; */
+  width: 10%; /* on small screens. On bigger screens it is smaller */
+  min-width: 26px; 
   display: inline-flex;
   /* Why doesn't notepad++ color the next two? */
   align-items: center;
@@ -100,8 +100,8 @@ p {
 }
 
 .filtercheckboxU, .filtercheckboxT {
-  width: 17.64%;
-  width: 50%;
+  /* width: 17.64%; */
+  width: 50%; 
   min-width: 120px; /* 10em; didn't work on iPad/iPhone */
 }
 
@@ -199,8 +199,8 @@ input[type=checkbox]:checked+.filterExpTheorycheckbox{ /* Label after the checke
 }
 
 
-@media (min-width: 380px) {
-  .filtercheckbox, .filterExpTheorycheckbox{
+@media (min-width: 390px) {
+  .filtercheckbox, .filterExpTheorycheckbox, #AtomButtons input[type=button]{
     font-size:16px;
   }
   .filtercheckboxU, .filtercheckboxT {
@@ -219,11 +219,21 @@ input[type=checkbox]:checked+.filterExpTheorycheckbox{ /* Label after the checke
   }
 }
 
+@media (min-width: 520px) {
+  .filtercheckbox {
+    width: 5.26%;
+  }
+  .filtercheckboxU, .filtercheckboxT {
+    width: 50%;
+  }
+}
+
+/*
 @media (max-width: 424px) {
   .filtercheckboxU, .filtercheckboxT {
     width: 30%;
   }
-}
+} */
 
 /*
 input[type=checkbox] {
