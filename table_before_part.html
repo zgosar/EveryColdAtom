@@ -34,7 +34,7 @@ function elegible(td, input){
 		return false;
 	}
 	if (td.innerHTML.toUpperCase().indexOf('THEORY') > -1) {
-	/* theory must be first in the sequence. At least before Th, othervise Th is false identified as prositive. */
+	/* theory must be first in the sequence. At least before Th, othervise Th is false identified as positive. */
 		for (i = 0; i < input.length; i++){
 			if (input[i].value == 'theory' && input[i].checked) return true;
 		}
@@ -53,12 +53,14 @@ function elegible(td, input){
 					//console.log(hloc, heloc, thloc);
 					/* TODO this is not foolproof. Example He, H will return false. But so far there are no Hydrogens.
 					TMP fix: H must be the first in the sequence.
+					Kr also returns KRb. TODO
 					*/
 					return true;
 				}
 				continue;
 			}
-			if (td.innerHTML.toUpperCase().indexOf(input[i].value.toUpperCase()) > -1){
+			//if (td.innerHTML.toUpperCase().indexOf(input[i].value.toUpperCase()) > -1){
+			if (td.innerHTML.indexOf(input[i].value) > -1){
 				return true;
 			}
 		}
