@@ -1,13 +1,11 @@
 <script>
 function hideshowPeriodic(input){
   periodicelement = document.getElementById("PeriodicID");
-  //console.log(periodicelement);
-  if (periodicelement.className == "periodic periodicshown") {
+  if (periodicelement.className == "periodic periodicshown" || periodicelement.className == "periodic") {
     periodicelement.className = "periodic periodichidden";
   }
   else {
     periodicelement.className = "periodic periodicshown";
-	
   }
 }
 

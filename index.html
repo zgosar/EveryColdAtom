@@ -220,7 +220,7 @@
 <input type='button' onclick='hideshowPeriodic(this);' name="shperiodic" value="Hide/Show periodic table" id="hideShowPeriodic">
 </div><!-- Source: https://codepen.io/nemophrost/pen/EkImb
 	Fixed errors such as nitrogen spelling.	-->
-<div class="periodic periodicshown" id="PeriodicID">
+<div class="periodic periodichidden" id="PeriodicID">
   <div class="periodic-row">
     <div class="cell" style="cursor: pointer;" onclick="periodicClick(this)">
       <div class="element available", id="periodicH">
@@ -1123,13 +1123,11 @@
 </div><script>
 function hideshowPeriodic(input){
   periodicelement = document.getElementById("PeriodicID");
-  //console.log(periodicelement);
-  if (periodicelement.className == "periodic periodicshown") {
+  if (periodicelement.className == "periodic periodicshown" || periodicelement.className == "periodic") {
     periodicelement.className = "periodic periodichidden";
   }
   else {
     periodicelement.className = "periodic periodicshown";
-	
   }
 }
 
@@ -1439,7 +1437,7 @@ document.addEventListener("DOMContentLoaded", function(n) {
 
 <div id='hideShowTableDiv'>
 <input type='button' onclick='hideshowTable(this);' name="shtable" value="Hide/Show table" id="hideShowTable">
-</div><div class="tg-wrap tg-wrap-shown" id="tg-wrap-id"><table id="tg-tg00" class="tg">
+</div><div class="tg-wrap tg-wrap-hidden" id="tg-wrap-id"><table id="tg-tg00" class="tg">
 <tr>
     <th class="tg-tg01">Group</th>
     <th class="tg-tg02">Institution</th>
@@ -4979,7 +4977,7 @@ document.addEventListener("DOMContentLoaded", function(n) {
 	  Žiga Gosar
 	  </p>
 	  <p>
-	  Last updated: June 8, 2019.
+	  Last updated: September 6, 2019.
 	  </p>
 	  </br></br>
 	</div>

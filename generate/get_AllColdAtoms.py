@@ -277,7 +277,7 @@ class GroupClass:
 
     def html_header_line(self):
         """ Exports the header line in the html table on the webpage. """
-        ret = """<div class="tg-wrap tg-wrap-shown" id="tg-wrap-id"><table id="tg-tg00" class="tg">
+        ret = """<div class="tg-wrap tg-wrap-hidden" id="tg-wrap-id"><table id="tg-tg00" class="tg">
 <tr>
     <th class="tg-tg01">Group</th>
     <th class="tg-tg02">Institution</th>
