@@ -462,7 +462,7 @@ if 0: # OBSOLETE load all from ucan OBSOLETE
     url = 'https://ucan.physics.utoronto.ca/Groups/group.2005-07-11.4942545460/view'
     #b = a.get_from_utoronto(url)
 
-new_filename = 'ucan_utoronto_database_test20191008.csv'
+new_filename = 'ucan_utoronto_database_test20200128.csv'
 print("New filename", new_filename)
 # update this filename to the last version of the file
 if 0: # load all from ucan. RUN THIS FIRST
@@ -505,9 +505,9 @@ if 1:
          'ucan_utoronto_database_production_with_geocode-edited2tabs.csv',
          ';', '	')
     # To update the production file, open both
-    # ucan_utoronto_database_production_with_geocode-edited2tabs.xlsx
-    # and new_filename in excel, edit the differences in edited2tabs.xlsx.
-    # Then copy paste ucan_utoronto_database_production_with_geocode-edited2tabs.xlsx
+    # ucan_utoronto_database_production_with_geocode-edited2.xlsx
+    # and new_filename in excel, edit the differences in edited2.xlsx.
+    # Then copy paste ucan_utoronto_database_production_with_geocode-edited2.xlsx
     # to ucan_utoronto_database_production_with_geocode-edited2tabs.csv
     
 
