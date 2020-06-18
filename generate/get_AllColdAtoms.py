@@ -182,7 +182,8 @@ class GroupClass:
 
     def get_from_csv(self, line, sep=';'):
         line = line.strip('\n')
-        #print(line.split(sep))
+        if len(line.split(sep)) != 12:
+            print(line.split(sep))
         (self.name, self.webpage, self.institution,
             self.country, self.address, self.lat,
             self.long, self.exp_theor, self.fields,
@@ -370,6 +371,7 @@ def diff(newfile, oldfile, sep1, sep2):
             a = GroupClass()
             a.get_from_csv(line, sep=sep1)
             data1.append(a)
+    print("New file processed")
     with open(oldfile, 'r', encoding="utf8") as f:
         f.readline()
         for i, line in enumerate(f):
@@ -383,6 +385,9 @@ def diff(newfile, oldfile, sep1, sep2):
     print("Removed groups", sorted(groups2-groups1))
 
     for i in range(min(len(data1), len(data2))):
+        if data1[i].name != data2[i].name:
+            print("Group name mismatch", data1[i].name, data2[i].name)
+            continue
         if data1[i].compare(data2[i], [
             'name',
             'webpage',
@@ -462,7 +467,7 @@ if 0: # OBSOLETE load all from ucan OBSOLETE
     url = 'https://ucan.physics.utoronto.ca/Groups/group.2005-07-11.4942545460/view'
     #b = a.get_from_utoronto(url)
 
-new_filename = 'ucan_utoronto_database_test20200128.csv'
+new_filename = 'ucan_utoronto_database_test20200618.csv'
 print("New filename", new_filename)
 # update this filename to the last version of the file
 if 0: # load all from ucan. RUN THIS FIRST
