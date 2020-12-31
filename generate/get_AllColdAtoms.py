@@ -132,13 +132,15 @@ class GroupClass:
             "div")[2].text.split("Research")[1].split()[0].strip()
         # Todo convert to old format Exp, Exp/Theory, Theory, insted of Experimen, Experiment/Theory, Theory
         
-        fields = thediv.find_all("div", {"class": "rich-text"})
-
-        if len(fields) == 0:
-            self.fields = GroupClass.defaults['fields']
-        else:
-            self.fields = fields[0].text.strip().replace(';', ',,').replace('\n', '        ')
-            # Replacements are maybe not necessary, but needed for backwards compatibility.
+        #fields = thediv.find_all("div", {"class": "rich-text"})
+        self.fields = GroupClass.defaults['fields']
+        self.fields = thediv.text
+        if "Permanent Researchers and Staff" in self.fields:
+            self.fields = self.fields.split("Permanent Researchers and Staff")[0]
+        self.fields = self.fields.split("Research")[1].lstrip()
+        fields_newline = self.fields.find('\n')
+        self.fields = self.fields[fields_newline:].strip().replace(';', ',,').replace('\n', '        ')
+        #    # Replacements are maybe not necessary, but needed for backwards compatibility.
 
 
         people = thediv.text.split("Permanent Researchers and Staff")
@@ -184,10 +186,15 @@ class GroupClass:
         line = line.strip('\n')
         if len(line.split(sep)) != 12:
             print(line.split(sep))
-        (self.name, self.webpage, self.institution,
-            self.country, self.address, self.lat,
-            self.long, self.exp_theor, self.fields,
-            self.people, self.atom, self.comment) = line.split(sep)
+        try:
+            (self.name, self.webpage, self.institution,
+                self.country, self.address, self.lat,
+                self.long, self.exp_theor, self.fields,
+                self.people, self.atom, self.comment) = line.split(sep)
+        except Exception as e:
+            print(e)
+            print("At line", line)
+            raise
         self.lat = float(self.lat)
         self.long = float(self.long)
 
@@ -332,34 +339,36 @@ class GroupClass:
            index=index)
         return ret
 
-    def compare(self, other, which):
+    def compare(self, other, which): # TODO return all differences.
         for w in which:
             if w == 'name':
-                if self.name != other.name: return False
+                if self.name != other.name: return False, 'name'
             if w == 'webpage':
-                if self.webpage != other.webpage: return False
+                if self.webpage != other.webpage: return False, 'webpage'
             if w == 'institution':
-                if self.institution != other.institution: return False
+                if self.institution != other.institution: return False, 'institution'
             if w == 'country':
-                if self.country != other.country: return False
+                if self.country != other.country: return False, 'country'
             if w == 'lat':
-                if self.lat != other.lat: return False
+                if self.lat != other.lat: return False, 'lat'
             if w == 'long':
-                if self.long != other.long: return False
+                if self.long != other.long: return False, 'long'
             if w == 'exp_theor':
-                if self.exp_theor != other.exp_theor: return False
+                if self.exp_theor != other.exp_theor: return False, 'exp_theor'
             if w == 'desc':
-                if self.fields != other.fields: return False
+                if (self.fields == 'y' or self.fields == 't') and other.fields == '':
+                    pass
+                elif self.fields != other.fields: return False, 'desc/fields'
             if w == 'atoms':
-                if self.atoms != other.atoms: return False
+                if self.atoms != other.atoms: return False, 'atoms'
             if w == 'people':
-                if self.people != other.people: return False
+                if self.people != other.people: return False, 'people'
             if w == 'comment':
-                if self.comment != other.comment: return False
+                if self.comment != other.comment: return False, 'comment'
             if w == 'index':
-                if self.index != other.index: return False
+                if self.index != other.index: return False, 'index'
 
-        return True
+        return True, 'True'
     
 def diff(newfile, oldfile, sep1, sep2):
     # tab '	'
@@ -378,7 +387,7 @@ def diff(newfile, oldfile, sep1, sep2):
             a = GroupClass()
             a.get_from_csv(line, sep=sep2)
             data2.append(a)
-    print(len(data1), len(data2))
+    print(len(data1), len(data2), "<- len data1 len data2")
     groups1 = set([i.name for i in data1])
     groups2 = set([i.name for i in data2])
     print("Added groups", sorted(groups1-groups2))
@@ -388,19 +397,25 @@ def diff(newfile, oldfile, sep1, sep2):
         if data1[i].name != data2[i].name:
             print("Group name mismatch", data1[i].name, data2[i].name)
             continue
-        if data1[i].compare(data2[i], [
+        cmp_val, cmp_details = data1[i].compare(data2[i], [
             'name',
             'webpage',
-             'country', # USA is different
+            'country', # USA is different
             'institution',
-            'desc', # a lot of desc seem to have diffapeard from webpage.
+            #'desc', # a lot of desc seem to have diffapeard from webpage.
             'people', # a lot of people seem to have diffapeard from webpage.
             #'exp_theor',
-            ]):
+            ])
+        if cmp_val:
             pass
         else:
-            print("New", data1[i].csv())
-            print("Old", data2[i].csv())
+            print("Diff in", cmp_details)
+            if cmp_details == 'desc/fields':
+                print("New", data1[i].name, data1[i].fields)
+                print("Old", data2[i].name, data2[i].fields)
+            else:
+                print("New", data1[i].csv())
+                print("Old", data2[i].csv())
             #print("New", data1[i].name, data1[i].country)
             #print("Old", data2[i].name, data2[i].country)
             print('----------')
@@ -467,7 +482,7 @@ if 0: # OBSOLETE load all from ucan OBSOLETE
     url = 'https://ucan.physics.utoronto.ca/Groups/group.2005-07-11.4942545460/view'
     #b = a.get_from_utoronto(url)
 
-new_filename = 'ucan_utoronto_database_test20200618.csv'
+new_filename = 'ucan_utoronto_database_test20201230-2.csv'
 print("New filename", new_filename)
 # update this filename to the last version of the file
 if 0: # load all from ucan. RUN THIS FIRST
@@ -497,13 +512,16 @@ if 0: # load all from ucan. RUN THIS FIRST
             if (str(row).strip() == ''): continue
             print(count, row.td.a['href'])
             count += 1
+            #if count != 4: continue
             a = GroupClass() # pretty sure this needs to be reinitialized.
             b = a.get_from_utoronto_new(base_url1 + row.td.a['href'])
             if do_geocode:
                 a.geocode(gmaps)
             f.write(a.csv())
+            #print(1/0)
+            sleep(5)
 
-if 1:
+if 0:
     # Calculate diff
     print("Calculating diff")
     data1, data2 = diff(new_filename,
