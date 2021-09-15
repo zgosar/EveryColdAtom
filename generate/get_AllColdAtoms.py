@@ -397,6 +397,9 @@ def diff(newfile, oldfile, sep1, sep2):
         if data1[i].name != data2[i].name:
             print("Group name mismatch", data1[i].name, data2[i].name)
             continue
+        #else: In Sept 2021, the order changer on UCAN. This was used to fix it.
+        #    print("Group name match", data1[i].name, data2[i].name)
+        #    continue
         cmp_val, cmp_details = data1[i].compare(data2[i], [
             'name',
             'webpage',
@@ -413,6 +416,9 @@ def diff(newfile, oldfile, sep1, sep2):
             if cmp_details == 'desc/fields':
                 print("New", data1[i].name, data1[i].fields)
                 print("Old", data2[i].name, data2[i].fields)
+            elif cmp_details == 'people':
+                print("New", data1[i].name, data2[i].people)
+                print("Old", data2[i].name, data2[i].people)
             else:
                 print("New", data1[i].csv())
                 print("Old", data2[i].csv())
@@ -482,7 +488,7 @@ if 0: # OBSOLETE load all from ucan OBSOLETE
     url = 'https://ucan.physics.utoronto.ca/Groups/group.2005-07-11.4942545460/view'
     #b = a.get_from_utoronto(url)
 
-new_filename = 'ucan_utoronto_database_test20201230-2.csv'
+new_filename = 'ucan_utoronto_database_test20210915.csv'
 print("New filename", new_filename)
 # update this filename to the last version of the file
 if 0: # load all from ucan. RUN THIS FIRST
@@ -521,7 +527,7 @@ if 0: # load all from ucan. RUN THIS FIRST
             #print(1/0)
             sleep(5)
 
-if 0:
+if 1:
     # Calculate diff
     print("Calculating diff")
     data1, data2 = diff(new_filename,
